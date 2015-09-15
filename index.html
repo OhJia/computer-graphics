@@ -74,21 +74,26 @@
          // ADD DIFFUSE SHADING WHERE SURFACE FACES THE LIGHT.
 
 //       float d = dot(vec3(x,y,z), vec3(1.,1.,sin(uTime))); // ANIMATE LIGHT DIRECTION.
-
          float d = dot(vec3(x,y,z), vec3(0.5,0.5,1.));
 
          if (d > 0.)
-            s += 0.3 * d;
+            s += 0.3 * d; // this adds the lighting
 
          // ADD CRAZY ANIMATED "WOODGRAIN" TEXTURE.
 
 	 // s *= 0.9 + 0.5 * sin(10. * (x - y + z + 0.1 * sin(8. * (x + .3 * sin(30. * (x-y+z) + 10. * uTime)))));
-    s *= 0.9 + 0.2 * sin(50. * (x * uCursor.x + y* uCursor.y + z + 0.1 * sin(8. * (x + .3 * uTime))));
+    //s *= 0.9 + 0.2 * sin(50. * (x * uCursor.x + y* uCursor.y + z + 0.1 * sin(8. * (x + .3 * uTime))));
+         // s *= 1.; // the larger the number the brighter it is
+         // s *= 1.0 + 0.1 * sin(x - y + z); // no difference from last
+         //s *= 1.0 + 0.1 * sin(10. * (x - y + z)); // create patterns that goes around the sphere on each pixel
+         //s *= 1.0 + 0.1 * sin(10. * (x - y + z + sin(10. * (x)))); // add waves to the existing pattern on x
+         //s *= 1.0 + 0.1 * sin(10. * (x - y + z + sin(10. * (x + y + z)+ uTime ))); // animate
+         s *= 1.0 + 0.1 * sin(10. * (x - y + z * uCursor.y * 2.0 + sin(10. * (x + y - z * uCursor.x * 2.0)+ uTime )));
       }
 
       // MULTIPY SHADE BY "WOOD" COLOR.
 
-      gl_FragColor = vec4(s * vec3(1., 1.0, 0.), 1.);
+      gl_FragColor = vec4(s * vec3(1.- uCursor.x, 1.0, 0.), 1.);
    }
 </script>
 
