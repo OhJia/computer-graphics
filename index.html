@@ -57,7 +57,7 @@
    void main() {
       float x = vPosition.x;
       float y = vPosition.y;
-      float z = computeZ(vPosition.xy, 1.0);
+      float z = computeZ(vPosition.xy, 0.8); // how is computeZ working?
 
       // BACKGROUND SHADE IS JUST BLACK (ZERO).
 
@@ -73,7 +73,7 @@
 
          // ADD DIFFUSE SHADING WHERE SURFACE FACES THE LIGHT.
 
-       float d = dot(vec3(x,y,z), vec3(1.,1.,sin(uTime))); // ANIMATE LIGHT DIRECTION.
+       float d = dot(vec3(x,y,z), vec3(1.,1.,sin(uTime)*0.5)); // ANIMATE LIGHT DIRECTION.
          //float d = dot(vec3(x,y,z), vec3(0.5,0.5,1.));
 
          if (d > 0.)
@@ -88,13 +88,13 @@
          //s *= 1.0 + 0.1 * sin(10. * (x - y + z)); // create patterns that goes around the sphere on each pixel
          //s *= 1.0 + 0.1 * sin(10. * (x - y + z + sin(10. * (x)))); // add waves to the existing pattern on x
          //s *= 1.0 + 0.1 * sin(10. * (x - y + z + sin(10. * (x + y + z)+ uTime ))); // animate
-         //s *= 1.0 + 0.1 * sin(10. * (x - y + z * uCursor.y * 2.0 + sin(10. * (x + y - z * uCursor.x * 2.0)+ sin(uTime)))); // move with cursor
-         s *= ((x + z) * 2. + sin((x + y)/5.3) * 2.5 + floor(x/30.) * 2.2);
+         //s *= 2.0 + 0.1 * sin(30. * (x - y + z * uCursor.y * 2.0 + sin(10. * (x + y - z * uCursor.x * 2.0)+ sin(uTime)))); // move with cursor
+         s *= ((x + y + z) * 1. + sin((x - y + z)/5.3 + sin(10. * (x + y + z * uCursor.x) * uTime * 10.)) * 0.5);
       }
 
       // MULTIPY SHADE BY "WOOD" COLOR.
 
-      gl_FragColor = vec4(s * vec3(1.- uCursor.x, 1.0, 0.), 1.); // s * is the vertex and fragment shader
+      gl_FragColor = vec4(s * vec3(1.+ uCursor.x, 1. + uCursor.y, 0.5), 1.); // s * is the vertex and fragment shader
    }
 </script>
 
