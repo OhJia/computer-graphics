@@ -20,7 +20,7 @@
    attribute vec3 aPosition;
    varying   vec3 vPosition;
    void main() {
-      gl_Position = vec4(aPosition, 1.0);
+      gl_Position = vec4(aPosition, 1.);
       vPosition = aPosition;
    }
 </script>
@@ -47,6 +47,7 @@
    // COMPUTE THE Z FOR A SPHERE OF RADIUS r.
 
    float computeZ(vec2 xy, float r) {
+      //float zz = r * r - cos(xy.x) * xy.x + sin(xy.y) * xy.y;
       float zz = r * r - xy.x * xy.x - xy.y * xy.y;
       if (zz < 0.)
          return -1.;
@@ -57,7 +58,7 @@
    void main() {
       float x = vPosition.x;
       float y = vPosition.y;
-      float z = computeZ(vPosition.xy, 0.8); // how is computeZ working?
+      float z = computeZ(vPosition.xy, 0.5); // how is computeZ working?
 
       // BACKGROUND SHADE IS JUST BLACK (ZERO).
 
@@ -91,6 +92,9 @@
          //s *= 2.0 + 0.1 * sin(30. * (x - y + z * uCursor.y * 2.0 + sin(10. * (x + y - z * uCursor.x * 2.0)+ sin(uTime)))); // move with cursor
          s *= ((x + y + z) * 1. + sin((x - y + z)/5.3 + sin(10. * (x + y + z * uCursor.x) * uTime * 10.)) * 0.5);
       }
+
+      // gamma correction
+      s = pow(s, .45);
 
       // MULTIPY SHADE BY "WOOD" COLOR.
 
