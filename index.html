@@ -40,12 +40,12 @@
       float d = b * b - c;
       float t = -b - sqrt(d);
 
-      if(t > 0.){
-         return t;
-       } else{
-         return 10000.;
-      }
-      //return 10000.;
+      // if(t > 0.){
+      //    return t;
+      //  } else{
+      //    return 10000.;
+      // }
+      return t;
    }
 
    // Diffusely shade a sphere.
@@ -102,9 +102,8 @@
       
       for (int i = 0; i < 10; i++){
          float t = raySphere(V, W, spheres[i]);
-         if (t < 10000.) {
+         if (t > 0.) {
             material = vec3(sin(float(i)), 0.5, 1.0);
-
             color = shadeSphere(V + t * W, spheres[i], material);
          }
       }
