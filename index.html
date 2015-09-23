@@ -39,12 +39,7 @@
       float b = dot(W, D);
       float d = b * b - c;
       float t = -b - sqrt(d);
-
-      // if(t > 0.){
-      //    return t;
-      //  } else{
-      //    return 10000.;
-      // }
+      
       return t;
    }
 
@@ -69,9 +64,6 @@
 
    void main(void) {
       vec2 c = uCursor.xy;
-      float x = vPosition.x;
-   float y = vPosition.y;
-   float z = vPosition.z;
 
       Lrgb = vec3(1.,.5,0.);
       Ldir = normalize(vec3(c.x, c.y, 1. - 2. * dot(c, c)));
@@ -89,7 +81,7 @@
 
       // YOU NEED TO SET x,y,z AND r FOR sphere.
       for (int i = 10; i >= 0; i--){
-            spheres[i] = vec4(6.*cos(uTime) * float(i) - 10., 15.* sin(float(i)*uTime),-80. + 30.*cos(uTime), float(i)*sin(uTime) + 2.);
+            spheres[i] = vec4(6.*cos(uTime/2.) * float(i) - 10., 20.* sin(float(i)*uTime/2.),-80. + 3.*cos(uTime/2.), float(i)*sin(uTime/2.) + 2.);
          
       }
       
@@ -107,11 +99,6 @@
             color = shadeSphere(V + t * W, spheres[i], material);
          }
       }
-
-       // We added this line in class.
-      // color.r *= 0.5 + 2.6 * sin(20.0 * (x + 0.6 * z  + 0.13   * cos(20.0 * y )) + uTime * 0.9); 
-      //    color.g *= 0.05 + 0.2 * sin(3.0 * (x + 0.3 * z + 0.03   * cos(20.0 * y  + uTime * 0.9 )) + uTime * 0.9);
-      //    color.b *= 0.3 + 0.3 * cos(10.0 * (x + 0.3 * z + 0.03   * sin(20.0 * x + uTime * 0.9 )) + uTime * 0.9);
 
       color = pow(color, vec3(.45,.45,.45)); // Do Gamma correction.
 
