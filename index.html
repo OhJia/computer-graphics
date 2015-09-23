@@ -39,7 +39,7 @@
       float b = dot(W, D);
       float d = b * b - c;
       float t = -b - sqrt(d);
-      
+
       return t;
    }
 
@@ -77,7 +77,7 @@
 
       V = vec3(0., 0., 1.);
 
-      W = normalize(vec3(vPosition.x-V.x, vPosition.y - V.y, -V.z));
+      W = normalize(vec3(vPosition.x, vPosition.y, -1.));
 
       // YOU NEED TO SET x,y,z AND r FOR sphere.
       for (int i = 10; i >= 0; i--){
