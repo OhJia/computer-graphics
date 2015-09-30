@@ -105,7 +105,7 @@
 
    vec3 shadeSphere(vec3 point, vec4 sphere, vec3 material) {
       vec3 ambient = material/3.;
-      vec3 diffuse = vec3(0., 1., 1.);
+      vec3 diffuse = vec3(0., .5, .5);
 
       //sphere.w = uTime * sphere.w;
 
@@ -121,7 +121,7 @@
       // float noise = 0.2 * abs(noise(normal.xy)) + 0.2 * abs(noise(vec3(normal.xy, uTime * 0.5)));
       float noise = 1. * noise(vec3(normal.xy, uTime*0.2));
       float texture = 0.5*fractal(vec3(sphere.xyz-point.xyz)+uTime * 1.);
-      float turbulence = turbulence(vec3(sphere.xyz)*4.);
+      float turbulence = turbulence(vec3(material.xyz)*4.);
       vec3 colorBase = ambient + Lrgb*diffuse*max(0.,dot(Ldir, normal));
       vec3 color = colorBase + (noise) + texture * .2;
       // float texture = 0.2*turbulence(vec3(sphere.xy-point.xy, uTime/15.)*4.) + 0.8*fractal(vec3(sphere.xyz-point.xyz)*2.);
@@ -165,9 +165,9 @@
       // ONE SPHERE
       // spheres[0] = vec4(0., 0., -23., 10.);
       // spheres[1] = vec4(0., 0., -23., 10.);
-      spheres[0] = vec4(6.*cos(uTime/2.) * float(1) - 10., 20.* sin(float(1)*uTime/2.),-80. + 3.*cos(uTime/2.), float(1)*sin(uTime/2.) + 15.);
+      spheres[0] = vec4(6.*cos(uTime/2.) * float(1) - 10., 20.* sin(float(1)*uTime/2.),-80. + 3.*cos(uTime/2.), float(1)*sin(uTime/2.) + 10.);
       //sphere = vec4(0.,4.*sin(.5*cos(2.*uTime)*cos(uTime)),-30.,5.);
-      spheres[1] = vec4(6.*cos(uTime/2.) * float(2) - 10., 20.* sin(float(2)*uTime/2.),-80. + 3.*cos(uTime/2.), float(2)*sin(uTime/2.) + 10.);
+      spheres[1] = vec4(6.*cos(uTime/2.) * float(2) - 10., 20.* sin(float(2)*uTime/2.),-80. + 3.*cos(uTime/2.), float(2)*sin(uTime/2.) + 15.);
       // YOU NEED TO SET r,g,b FOR material.
       
 
@@ -175,7 +175,7 @@
 
       
       float m1 = 0.5 + 0.6 * sin(2.0 * (sphere.x + 0.6 * sphere.z + 0.13   * cos(20.0 * sphere.y + uTime * 0.9 ))); 
-      //    float m2 = 0.2 * sin(3.0 * (sphere.x + 0.3 * sphere.z + 0.03   * cos(20.0 * sphere.y + uTime * 0.9 )));
+         float m2 = 0.2 * sin(3.0 * (sphere.x + 0.3 * sphere.z + 0.03   * cos(20.0 * sphere.y + uTime * 0.9 )));
       //    float m3 = 0.3 * cos(10.0 * (sphere.y + 0.3 * sphere.z + 0.03   * sin(20.0 * sphere.x + uTime * 0.9 )));
 
       material = vec3(0.,.5, m1);
@@ -193,8 +193,10 @@
       
       if( temp > 0.){
          //t *= (0.5 * sin(uTime) * 2.0);
-         if(temp == tA)
+         if(temp == tA){
+            material = vec3(0.,0.5, m2);
             color = shadeSphere(V + temp * W, spheres[0], material);
+         }
          else if(temp == tB)
             color = shadeSphere(V + temp * W, spheres[1], material);
          
