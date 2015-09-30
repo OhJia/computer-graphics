@@ -119,7 +119,7 @@
       // vec3 color = (ambient + Lrgb*diffuse*max(0.,dot(Ldir, normal))) * noise(vec3(normal.xy, uTime));
       // vec3 color = (ambient + Lrgb*diffuse*max(0.,dot(Ldir, normal))) * noise(vec2(normal.xy*30.))/fractal(normal);
       // float noise = 0.2 * abs(noise(normal.xy)) + 0.2 * abs(noise(vec3(normal.xy, uTime * 0.5)));
-      float noise = 1. * noise(vec3(normal.xy, uTime*0.2));
+      float noise = 1. * noise(vec3(normal.xy, uTime*0.2)* fractal(vec3(sphere.xyz-point.xyz)+uTime * 1.));
       float texture = 0.5*fractal(vec3(sphere.xyz-point.xyz)+uTime * 1.);
       float turbulence = turbulence(vec3(material.xyz)*4.);
       vec3 colorBase = ambient + Lrgb*diffuse*max(0.,dot(Ldir, normal));
