@@ -104,14 +104,14 @@
    //    material is the r,g,b color of the sphere.
 
    vec3 shadeSphere(vec3 point, vec4 sphere, vec3 material) {
-      vec3 ambient = material/8.;
-      vec3 diffuse = vec3(0., 2., 2.);
+      vec3 ambient = material/3.;
+      vec3 diffuse = vec3(0., 5., 5.);
 
       //sphere.w = uTime * sphere.w;
 
       // YOU NEED TO COMPUTE COLOR FOR A DIFFUSELY SHADED SPHERE.
       //vec3 normal = (point - sphere.xyz) / sphere.w;
-       vec3 normal = turbulence(vec3(uTime * .1, sphere.xy-point.xy)*.1) * (point - sphere.xyz) / sphere.w;
+       vec3 normal = .1 * turbulence(vec3(uTime * .1, sphere.xy-point.xy)*.1) * (point - sphere.xyz) / sphere.w;
       
       // FOR THE AMBIENT COMPONENT OF THE DIFFUSE SHADING, YOU CAN
       // USE A SIMPLE APPROXIMATION SUCH AS: ambient = material / 5.;
@@ -119,11 +119,11 @@
       // vec3 color = (ambient + Lrgb*diffuse*max(0.,dot(Ldir, normal))) * noise(vec3(normal.xy, uTime));
       // vec3 color = (ambient + Lrgb*diffuse*max(0.,dot(Ldir, normal))) * noise(vec2(normal.xy*30.))/fractal(normal);
       // float noise = 0.2 * abs(noise(normal.xy)) + 0.2 * abs(noise(vec3(normal.xy, uTime * 0.5)));
-      float noise = 1.5 * noise(normal.xy) - 0.1 * noise(normal);
+      float noise = 5.5 * noise(normal.xy) + 0.1 * noise(normal);
       float texture = 0.5*fractal(vec3(material.xyz-point.xyz)+uTime * .2);
-      //float turbulence = turbulence(vec3(sphere.xy-point.xy, uTime/15.)*4.)
+      float turbulence = turbulence(vec3(sphere.xyz)*4.);
       vec3 colorBase = ambient + Lrgb*diffuse*max(0.,dot(Ldir, normal));
-      vec3 color = colorBase + (noise) + texture * .2;
+      vec3 color = colorBase + (noise) + texture * .2 + turbulence * .1;
       // float texture = 0.2*turbulence(vec3(sphere.xy-point.xy, uTime/15.)*4.) + 0.8*fractal(vec3(sphere.xyz-point.xyz)*2.);
       // float lightning = 1.;
       // //if(int(floor(mod(10.,10.*sin(uTime)))) == 0){
@@ -141,7 +141,7 @@
 
       Lrgb = vec3(0.,1.5,1.5);
       //Ldir = normalize(vec3(c.x, c.y, 1. - 2. * dot(c, c)));
-      Ldir = normalize(vec3(100., 20., 50. - 2. * dot(c, c)));
+      Ldir = normalize(vec3(100., 100., 100.));
       //Ldir = normalize(vec3(c.x, c.y, 1.));
       float s = 0.0;
 
