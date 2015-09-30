@@ -163,27 +163,41 @@
       // }
       
       // ONE SPHERE
-      sphere = vec4(0., 0., -23., 10.);
-      
+      // spheres[0] = vec4(0., 0., -23., 10.);
+      // spheres[1] = vec4(0., 0., -23., 10.);
+      spheres[0] = vec4(6.*cos(uTime/2.) * float(0) - 10., 20.* sin(float(0)*uTime/2.),-80. + 3.*cos(uTime/2.), float(0)*sin(uTime/2.) + 10.);
       //sphere = vec4(0.,4.*sin(.5*cos(2.*uTime)*cos(uTime)),-30.,5.);
-
+      spheres[1] = vec4(6.*cos(uTime/2.) * float(1) - 10., 20.* sin(float(1)*uTime/2.),-80. + 3.*cos(uTime/2.), float(1)*sin(uTime/2.) + 10.);
       // YOU NEED TO SET r,g,b FOR material.
       
 
       vec3 color = vec3(0., 0., 0.);
 
       
-      float m1 = 0.5 + 0.6 * sin(2.0 * (sphere.x + 0.6 * sphere.z + 0.13   * cos(20.0 * sphere.y + uTime * 0.9 ))); 
-         float m2 = 0.2 * sin(3.0 * (sphere.x + 0.3 * sphere.z + 0.03   * cos(20.0 * sphere.y + uTime * 0.9 )));
-         float m3 = 0.3 * cos(10.0 * (sphere.y + 0.3 * sphere.z + 0.03   * sin(20.0 * sphere.x + uTime * 0.9 )));
+      // float m1 = 0.5 + 0.6 * sin(2.0 * (sphere.x + 0.6 * sphere.z + 0.13   * cos(20.0 * sphere.y + uTime * 0.9 ))); 
+      //    float m2 = 0.2 * sin(3.0 * (sphere.x + 0.3 * sphere.z + 0.03   * cos(20.0 * sphere.y + uTime * 0.9 )));
+      //    float m3 = 0.3 * cos(10.0 * (sphere.y + 0.3 * sphere.z + 0.03   * sin(20.0 * sphere.x + uTime * 0.9 )));
 
-         material = vec3(0., m1, m1);
-
+      material = vec3(0.,.5, .5);
+       float tA = raySphere(V, W, spheres[0]);
+       float tB = raySphere(V, W, spheres[1]);
+      
+      float temp = 10000.;
+      for (int i = 0; i < 2; i++){
+         float t = raySphere(V, W, spheres[i]);
+         if (t < temp){
+            temp = t;
+         }
+      }
       //ONE SPHERE
-      float t = raySphere(V, W, sphere);
-      if( t > 0.){
+      
+      if( temp > 0.){
          //t *= (0.5 * sin(uTime) * 2.0);
-         color = shadeSphere(V + t * W, sphere, material);
+         if(temp == tA)
+            color = shadeSphere(V + temp * W, spheres[0], material);
+         else if(temp == tB)
+            color = shadeSphere(V + temp * W, spheres[1], material);
+         
       }
       
       //MULTIPLE SPHERES
