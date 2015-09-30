@@ -123,7 +123,7 @@
       float texture = 0.5*fractal(vec3(material.xyz-point.xyz)+uTime * .5);
       float turbulence = turbulence(vec3(sphere.xyz)*4.);
       vec3 colorBase = ambient + Lrgb*diffuse*max(0.,dot(Ldir, normal));
-      vec3 color = colorBase + (noise) + texture * .2 + turbulence * .1;
+      vec3 color = colorBase + (noise) + texture * .2;
       // float texture = 0.2*turbulence(vec3(sphere.xy-point.xy, uTime/15.)*4.) + 0.8*fractal(vec3(sphere.xyz-point.xyz)*2.);
       // float lightning = 1.;
       // //if(int(floor(mod(10.,10.*sin(uTime)))) == 0){
@@ -165,9 +165,9 @@
       // ONE SPHERE
       // spheres[0] = vec4(0., 0., -23., 10.);
       // spheres[1] = vec4(0., 0., -23., 10.);
-      spheres[0] = vec4(6.*cos(uTime/2.) * float(0) - 10., 20.* sin(float(0)*uTime/2.),-80. + 3.*cos(uTime/2.), float(0)*sin(uTime/2.) + 10.);
+      spheres[0] = vec4(6.*cos(uTime/2.) * float(1) - 10., 20.* sin(float(1)*uTime/2.),-80. + 3.*cos(uTime/2.), float(1)*sin(uTime/2.) + 10.);
       //sphere = vec4(0.,4.*sin(.5*cos(2.*uTime)*cos(uTime)),-30.,5.);
-      spheres[1] = vec4(6.*cos(uTime/2.) * float(1) - 10., 20.* sin(float(1)*uTime/2.),-80. + 3.*cos(uTime/2.), float(1)*sin(uTime/2.) + 10.);
+      spheres[1] = vec4(6.*cos(uTime/2.) * float(2) - 10., 20.* sin(float(2)*uTime/2.),-80. + 3.*cos(uTime/2.), float(2)*sin(uTime/2.) + 10.);
       // YOU NEED TO SET r,g,b FOR material.
       
 
