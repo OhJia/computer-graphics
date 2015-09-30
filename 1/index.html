@@ -90,7 +90,7 @@
          //s *= 1.0 + 0.1 * sin(10. * (x - y + z)); // create patterns that goes around the sphere on each pixel
          //s *= 1.0 + 0.1 * sin(10. * (x - y + z + sin(10. * (x)))); // add waves to the existing pattern on x
          //s *= 1.0 + 0.1 * sin(10. * (x - y + z + sin(10. * (x + y + z)+ uTime ))); // animate
-         //s *= 2.0 + 0.1 * sin(30. * (x - y + z * uCursor.y * 2.0 + sin(10. * (x + y - z * uCursor.x * 2.0)+ sin(uTime)))); // move with cursor
+         s *= 2.0 + 0.1 * sin(30. * (x - y + z * uCursor.y * 2.0 + sin(10. * (x + y - z * uCursor.x * 2.0)+ sin(uTime)))); // move with cursor
          //s *= ((x + y + z) * 1. + sin((x - y + z)/5.3 + sin(10. * (x + y + z * uCursor.x) * 10.)) * 0.5);
 
          float aT = abs(s);
@@ -98,9 +98,9 @@
          color = vec3(aT, aT, aT);                         
          //make cool easter egg-like
          //color.r *= 0.5 + 2.6 * sin(20.0 * (x + 0.6 * z + 0.13   * cos(20.0 * y + uTime * 0.9 )) + uTime * 0.9); 
-         color.r *= 0.5 + 2.6 * sin(20.0 * (x * uCursor.x + 0.6 * z  + 0.13   * cos(20.0 * y + uCursor.x * 2.3 )) + uTime * 0.9); 
-         color.g *= 0.05 + 0.2 * sin(3.0 * (x * uCursor.y + 0.3 * z + 0.03   * cos(20.0 * y  + uTime * 0.9 )) + uTime * 0.9);
-         color.b *= 0.3 + 0.3 * cos(10.0 * (x + 0.3 * z + 0.03   * sin(20.0 * x + uTime * 0.9 )) + uTime * 0.9);
+         // color.r *= 0.5 + 2.6 * sin(20.0 * (x * uCursor.x + 0.6 * z  + 0.13   * cos(20.0 * y + uCursor.x * 2.3 )) + uTime * 0.9); 
+         // color.g *= 0.05 + 0.2 * sin(3.0 * (x * uCursor.y + 0.3 * z + 0.03   * cos(20.0 * y  + uTime * 0.9 )) + uTime * 0.9);
+         // color.b *= 0.3 + 0.3 * cos(10.0 * (x + 0.3 * z + 0.03   * sin(20.0 * x + uTime * 0.9 )) + uTime * 0.9);
 
       }
 
