@@ -94,15 +94,46 @@
 
    float raySphere(vec3 V, vec3 W, vec4 sph) {
 
-      // YOU NEED TO COMPUTE t, BY SETTING UP AND THEN SOLVING A QUADRATIC EQUATION.
-      vec3 D = V - sph.xyz;
-      float c = dot(D, D) - (sph.w * sph.w);
-      float b = dot(W, D);
-      float d = b * b - c;
-      float t = -b - sqrt(d);
-      // (0.15 * abs(sin(uTime) * 2.0)) + max(0.0, (dX * sin(uTime * 0.7) + dY * cos(uTime * 0.7) + z) * 1.5);        
+      // float t; 
+      // float r = sph.w;
+      // float a = dot(W, W);
+      // float b = dot(W, V-sph.xyz) * 2.;
+      // float c = dot(V-sph.xyz, V-sph.xyz) - (sph.w * sph.w);
+      // //quadratic fomula
+      // t = (-1. * b - sqrt(b * b - 4. * a * c)) / 2. * a;
+      // if( t > 0.){
+      //    return t;
+      // } else {
+      //    return 10000.;
+      // }
 
-      return t;
+      // float t = 0.0;
+      // float a = dot(W, W);
+      // float b = dot(W, V - sph.xyz);
+      // float c = dot(V - sph.xyz, V - sph.xyz) - (sph.w * sph.w);            
+      // t = (-1. * b - sqrt(b * b - 4. * a * c)) / 2. * a; 
+      
+      // if (t < 0.0) {
+      //    return 10000.0;
+      // } else {
+      //    //t = -b - sqrt(d);
+      //    return t;
+      // }
+
+      // YOU NEED TO COMPUTE t, BY SETTING UP AND THEN SOLVING A QUADRATIC EQUATION.
+      float t = 0.0;
+      float c = dot(V - sph.xyz, V - sph.xyz) - (sph.w * sph.w);
+      float b = dot(W, V - sph.xyz);
+      float insideSqrt = b * b - c; 
+      
+      // if (insideSqrt < 0.0) {
+      //    return 10000.0;
+      // } else {
+         t = -b - sqrt(insideSqrt);
+         return t;
+      //}
+        
+      // (0.15 * abs(sin(uTime) * 2.0)) + max(0.0, (dX * sin(uTime * 0.7) + dY * cos(uTime * 0.7) + z) * 1.5);             
    }
 
    // Diffusely shade a sphere.
@@ -110,7 +141,7 @@
    //    sphere is the x,y,z,r definition of the sphere.
    //    material is the r,g,b color of the sphere.
 
-   vec3 shadeSphere(vec3 point, vec4 sphere, vec3 material) {
+   vec3 shadeSphere(float shadowt, vec3 point, vec4 sphere, vec3 material) {
       
       // YOU NEED TO COMPUTE COLOR FOR A DIFFUSELY SHADED SPHERE.
       vec3 normal = (point - sphere.xyz) / sphere.w;
@@ -118,20 +149,33 @@
       // COMPUTE SPECULAR REFLECTION
       vec3 Srgb = vec3(.5, .5, .5); // do I need to normalize this?
       vec3 R = 2. * dot(normal, Ldir) * normal - Ldir;
-      vec3 specular = Srgb * pow(max(0., dot(-W, R)), 18.);
+      vec3 specular = Srgb * pow(max(0., dot(-W, R)), 35.);
+
+      vec3 color = vec3(0.0, 0.0, 0.0);
+      vec3 ambient = material/5.;
+      vec3 D = vec3(0., .5, .5);
+      vec3 diffuse = D * max(0.,dot(Ldir, normal));
+
+      float noise = 0.2 * abs(noise(normal.xy)) + 0.2 * abs(noise(vec3(normal.xy, uTime * 0.5)));
+      float texture = 0.5*fractal(vec3(sphere.xyz-point.xyz)+uTime * 1.);
+      float turbulence = turbulence(vec3(material.xyz)*4.);
+      
+      if (shadowt != 10000. && shadowt > 0.0) {
+         vec3 colorBase = ambient * 0.5 + Lrgb*(diffuse) * 0.05;         
+         color = colorBase + (noise) + texture * .1; 
+
+      } else {
+         
+         vec3 colorBase = ambient + Lrgb*(diffuse + specular);         
+         color = colorBase + (noise) + texture * .2; 
+
+      }
 
       
       // FOR THE AMBIENT COMPONENT OF THE DIFFUSE SHADING, YOU CAN
       // USE A SIMPLE APPROXIMATION SUCH AS: ambient = material / 5.;
-      vec3 ambient = material/5.;
-      vec3 D = vec3(0., .5, .5);
-      vec3 diffuse = D * max(0.,dot(Ldir, normal));
-      float noise = 0.2 * abs(noise(normal.xy)) + 0.2 * abs(noise(vec3(normal.xy, uTime * 0.5)));
-      float texture = 0.5*fractal(vec3(sphere.xyz-point.xyz)+uTime * 1.);
-      float turbulence = turbulence(vec3(material.xyz)*4.);
-      vec3 colorBase = ambient + Lrgb*(diffuse + specular);
       
-      vec3 color = colorBase + (noise) + texture * .2;     
+          
       return color;
    }
 
@@ -145,7 +189,7 @@
 
       // YOU NEED TO COMPUTE V AND W TO CREATE THE RAY FOR THIS PIXEL,
       // USING vPosition.x AND vPosition.y.
-      V = vec3(0., 0., 1.);
+      V = vec3(5., 0., 1.);
       W = normalize(vec3(vPosition.x, vPosition.y, -1.));
 
       // YOU NEED TO SET x,y,z AND r FOR sphere.
@@ -156,11 +200,12 @@
 
       // MULTIPLE SPHERES
       spheres[0] = vec4(0.,4.*sin(.5*cos(2.*uTime)*cos(uTime)),-30.,10.);
-      spheres[1] = vec4(5.,4.*sin(1.5*cos(2.*uTime)*cos(uTime)),-20.,3.);
+      spheres[1] = vec4(5.,4.*sin(1.5*cos(2.*uTime)*cos(uTime)),-15.,3.);
+      //spheres[1] = vec4(6.*cos(uTime) * 1. - 10., 5.* sin(uTime), -20. + 3.*cos(uTime/2.), 3.);
 
       // YOU NEED TO SET r,g,b FOR material.
       vec3 color = vec3(0., 0., 0.);
-      material = vec3(0.5,0.1, .2);
+      material = vec3(.5,.5, .5);
       
       // ONE SPHERE
       //float t = raySphere(V, W, sphere);
@@ -173,30 +218,37 @@
       float mt = 0.0;
       mt = min(t0, t1);
 
-      if (mt > 0.0) {
+      // if (t0 != 10000.) {
+      //       vec3 point = V + t0 * W;            
+      //       vec3 shadowPoint = point + 0.001 * Ldir;
+      //       float shadowt0 = raySphere(shadowPoint, Ldir, spheres[1]);
+      //       //vec3 shadowPoint = shadow + shadowt * Ldir;
+      //       color = shadeSphere(shadowt, point, spheres[0], material); 
+      //    }
+      //    if (t1 != 10000.) {
+      //       vec3 point = V + t1 * W;
+      //       vec3 shadowPoint = point + 0.001 * Ldir;
+      //       float shadowt0 = raySphere(shadowPoint, Ldir, spheres[0]);
+      //       color = shadeSphere(shadowt, point, spheres[1], material); 
+      //    }
+      
+
+      if (mt != 10000.) {
          if (mt == t0) {
-            vec3 point = V + t0 * W;
-            color = shadeSphere(point, spheres[0], material); 
+            vec3 point = V + t0 * W;            
+            vec3 shadowPoint = point + 0.001 * Ldir;
+            float shadowt = raySphere(shadowPoint, Ldir, spheres[1]);
+            //vec3 shadowPoint = shadow + shadowt * Ldir;
+            color = shadeSphere(shadowt, point, spheres[0], material); 
          }
          if (mt == t1) {
             vec3 point = V + t1 * W;
-            color = shadeSphere(point, spheres[1], material); 
+            vec3 shadowPoint = point + 0.001 * Ldir;
+            float shadowt = raySphere(shadowPoint, Ldir, spheres[0]);
+            color = shadeSphere(shadowt, point, spheres[1], material); 
          }
       }
-
-      //RAY SHADOW
-      //vec3 shadow = S1 + 0.001 * Ldir;
-
       
-      // if( t0 > 0.){
-      //    color = shadeSphere(S0, spheres[0], material);         
-      // } 
-      // if( t1 > 0.){
-      //    color = shadeSphere(S1, spheres[1], material);         
-      // } 
-      
-      
-
       color = pow(color, vec3(.45,.45,.45)); // Do Gamma correction.
 
       gl_FragColor = vec4(color, 1.);        // Set opacity to 1.
