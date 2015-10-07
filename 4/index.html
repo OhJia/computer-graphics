@@ -217,7 +217,7 @@
 
       // MULTIPLE SPHERES
       spheres[0] = vec4(0.,4.*sin(.5*cos(2.*uTime)*cos(uTime)),-30.,10.);
-      spheres[1] = vec4(5.,4.*sin(1.5*cos(2.*uTime)*cos(uTime)),-15.,3.);
+      spheres[1] = vec4(8.,4.*sin(1.5*cos(2.*uTime)*cos(uTime)),-15.,3.);
       //spheres[1] = vec4(6.*cos(uTime) * 1. - 10., 5.* sin(uTime), -20. + 3.*cos(uTime/2.), 3.);
 
       // YOU NEED TO SET r,g,b FOR material.
@@ -258,7 +258,7 @@
             //vec3 shadowPoint = shadow + shadowt * Ldir;
             material = vec3(.5,.1, .3);
             color = shadeSphere(shadowt, point, spheres[0], material); 
-            color += returnRefColor(point, spheres[0], spheres[1]);
+            color += returnRefColor(point, spheres[0], spheres[1]) * 0.1;
 
             // material = vec3(.5,.1, .3);
             // color = shadeSphere(point, spheres[0], material); 
@@ -269,7 +269,7 @@
             float shadowt = raySphere(shadowPoint, Ldir, spheres[0]);
             material = vec3(.1,.1, .6);
             color = shadeSphere(shadowt, point, spheres[1], material); 
-            color += returnRefColor(point, spheres[1], spheres[0]);
+            color += returnRefColor(point, spheres[1], spheres[0]) * 0.1;
             // material = vec3(.5,.1, .3);
             // color = shadeSphere(point, spheres[0], material); 
          }
