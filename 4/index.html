@@ -118,7 +118,7 @@
       // COMPUTE SPECULAR REFLECTION
       vec3 Srgb = vec3(.5, .5, .5); // do I need to normalize this?
       vec3 R = 2. * dot(normal, Ldir) * normal - Ldir;
-      vec3 specular = Srgb * pow(max(0., dot(-W, R)), 15.);
+      vec3 specular = Srgb * pow(max(0., dot(-W, R)), 18.);
 
       
       // FOR THE AMBIENT COMPONENT OF THE DIFFUSE SHADING, YOU CAN
@@ -165,18 +165,35 @@
       // ONE SPHERE
       //float t = raySphere(V, W, sphere);
 
-      //RAY SHADOW
-
       // MULTIPLE SPHERES
       float t0 = raySphere(V, W, spheres[0]);
       float t1 = raySphere(V, W, spheres[1]);
+
+      // Check which one is closest
+      float mt = 0.0;
+      mt = min(t0, t1);
+
+      if (mt > 0.0) {
+         if (mt == t0) {
+            vec3 point = V + t0 * W;
+            color = shadeSphere(point, spheres[0], material); 
+         }
+         if (mt == t1) {
+            vec3 point = V + t1 * W;
+            color = shadeSphere(point, spheres[1], material); 
+         }
+      }
+
+      //RAY SHADOW
+      //vec3 shadow = S1 + 0.001 * Ldir;
+
       
-      if( t0 > 0.){
-         color = shadeSphere(V + t0 * W, spheres[0], material);         
-      } 
-      if( t1 > 0.){
-         color = shadeSphere(V + t1 * W, spheres[1], material);         
-      } 
+      // if( t0 > 0.){
+      //    color = shadeSphere(S0, spheres[0], material);         
+      // } 
+      // if( t1 > 0.){
+      //    color = shadeSphere(S1, spheres[1], material);         
+      // } 
       
       
 
