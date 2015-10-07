@@ -126,12 +126,12 @@
       float b = dot(W, V - sph.xyz);
       float insideSqrt = b * b - c; 
       
-      // if (insideSqrt < 0.0) {
-      //    return 10000.0;
-      // } else {
-         t = -b - sqrt(insideSqrt);
+      if (insideSqrt < 0.0) {
+         return 10000.0;
+      } else {
+         t = max(0., -b - sqrt(insideSqrt));
          return t;
-      //}
+      }
         
       // (0.15 * abs(sin(uTime) * 2.0)) + max(0.0, (dX * sin(uTime * 0.7) + dY * cos(uTime * 0.7) + z) * 1.5);             
    }
@@ -146,10 +146,13 @@
       // YOU NEED TO COMPUTE COLOR FOR A DIFFUSELY SHADED SPHERE.
       vec3 normal = (point - sphere.xyz) / sphere.w;
 
-      // COMPUTE SPECULAR REFLECTION
+      // COMPUTE PHONG SPECULAR REFLECTION
       vec3 Srgb = vec3(.5, .5, .5); // do I need to normalize this?
       vec3 R = 2. * dot(normal, Ldir) * normal - Ldir;
       vec3 specular = Srgb * pow(max(0., dot(-W, R)), 35.);
+
+      // vec3 shadowPoint = point + 0.001 * Ldir;
+      // float shadowt = raySphere(shadowPoint, Ldir, spheres);
 
       vec3 color = vec3(0.0, 0.0, 0.0);
       vec3 ambient = material/5.;
@@ -179,6 +182,20 @@
       return color;
    }
 
+   vec3 returnRefColor(vec3 point, vec4 thisSphere, vec4 targetSphere){
+      vec3 color = vec3(0., 0., 0.);
+      vec3 normal = (point - thisSphere.xyz) / thisSphere.w;
+      vec3 reflectionW = 2. * dot(normal, -Ldir) * normal - (-Ldir);
+      vec3 reflectionV = point + 0.001 * reflectionW;
+
+      float reflectionT = raySphere(reflectionV, reflectionW, targetSphere);
+      if(reflectionT != 10000.0 && reflectionT > 0. ){
+         return color = vec3(1., 1., 0.);
+      } else {
+         return color = vec3(0., 0., 0.);
+      }
+   }
+
    void main(void) {
       vec2 c = uCursor.xy;
 
@@ -200,7 +217,7 @@
 
       // MULTIPLE SPHERES
       spheres[0] = vec4(0.,4.*sin(.5*cos(2.*uTime)*cos(uTime)),-30.,10.);
-      spheres[1] = vec4(5.,4.*sin(1.5*cos(2.*uTime)*cos(uTime)),-15.,3.);
+      spheres[1] = vec4(5.,4.*sin(3.5*cos(2.*uTime)*cos(uTime)),-15.,3.);
       //spheres[1] = vec4(6.*cos(uTime) * 1. - 10., 5.* sin(uTime), -20. + 3.*cos(uTime/2.), 3.);
 
       // YOU NEED TO SET r,g,b FOR material.
@@ -241,6 +258,10 @@
             //vec3 shadowPoint = shadow + shadowt * Ldir;
             material = vec3(.5,.1, .3);
             color = shadeSphere(shadowt, point, spheres[0], material); 
+            color += returnRefColor(point, spheres[0], spheres[1]);
+
+            // material = vec3(.5,.1, .3);
+            // color = shadeSphere(point, spheres[0], material); 
          }
          if (mt == t1) {
             vec3 point = V + t1 * W;
@@ -248,6 +269,9 @@
             float shadowt = raySphere(shadowPoint, Ldir, spheres[0]);
             material = vec3(.1,.1, .6);
             color = shadeSphere(shadowt, point, spheres[1], material); 
+            color += returnRefColor(point, spheres[1], spheres[0]);
+            // material = vec3(.5,.1, .3);
+            // color = shadeSphere(point, spheres[0], material); 
          }
       }
       
