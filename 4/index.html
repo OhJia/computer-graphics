@@ -239,12 +239,14 @@
             vec3 shadowPoint = point + 0.001 * Ldir;
             float shadowt = raySphere(shadowPoint, Ldir, spheres[1]);
             //vec3 shadowPoint = shadow + shadowt * Ldir;
+            material = vec3(.5,.1, .3);
             color = shadeSphere(shadowt, point, spheres[0], material); 
          }
          if (mt == t1) {
             vec3 point = V + t1 * W;
             vec3 shadowPoint = point + 0.001 * Ldir;
             float shadowt = raySphere(shadowPoint, Ldir, spheres[0]);
+            material = vec3(.1,.1, .6);
             color = shadeSphere(shadowt, point, spheres[1], material); 
          }
       }
