@@ -185,7 +185,7 @@
    vec3 returnRefColor(vec3 point, vec4 thisSphere, vec4 targetSphere){
       vec3 color = vec3(0., 0., 0.);
       vec3 normal = (point - thisSphere.xyz) / thisSphere.w;
-      vec3 reflectionW = 2. * dot(normal, -Ldir) * normal - (-Ldir);
+      vec3 reflectionW = 2. * dot(normal, -W) * normal - (-W);
       vec3 reflectionV = point + 0.001 * reflectionW;
 
       float reflectionT = raySphere(reflectionV, reflectionW, targetSphere);
@@ -217,7 +217,7 @@
 
       // MULTIPLE SPHERES
       spheres[0] = vec4(0.,4.*sin(.5*cos(2.*uTime)*cos(uTime)),-30.,10.);
-      spheres[1] = vec4(5.,4.*sin(3.5*cos(2.*uTime)*cos(uTime)),-15.,3.);
+      spheres[1] = vec4(5.,4.*sin(1.5*cos(2.*uTime)*cos(uTime)),-15.,3.);
       //spheres[1] = vec4(6.*cos(uTime) * 1. - 10., 5.* sin(uTime), -20. + 3.*cos(uTime/2.), 3.);
 
       // YOU NEED TO SET r,g,b FOR material.
