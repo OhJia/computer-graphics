@@ -223,8 +223,8 @@
       vec2 c = uCursor.xy;
 
       Lrgb = vec3(.5,.5,.5);
-      //Ldir = normalize(vec3(c.x, c.y, 1. - 2. * dot(c, c)));
-      Ldir = normalize(vec3(350., 380., 500.));
+      Ldir = normalize(vec3(c.x, c.y, 1. - 2. * dot(c, c)));
+      //Ldir = normalize(vec3(350., 380., 500.));
       float s = 0.0;
 
       // YOU NEED TO COMPUTE V AND W TO CREATE THE RAY FOR THIS PIXEL,
