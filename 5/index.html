@@ -5,7 +5,7 @@
 <td><canvas id='canvas1' width=600 height=400></td>
 <td width=50></td>
 <td valign=top>
-Hi, I am finally a cube.
+Hi, I am a cube that does tricks. Put your cursor over me to watch me spin. Wheeeee 
 </td>
 </tr>
 
@@ -56,10 +56,20 @@ Hi, I am finally a cube.
       g.strokeStyle="#000000";
       for (var i = 0; i < 10; i++){
          g.lineWidth = 1/i;
-         vContainers[i] = m1[i]
-         .rotateZ(i * 0.01)
-         .rotateY(i * 0.01)
-         .transform(cubeVertices, vContainers[i]);
+         if (canvas.cursor.x < canvas.width/2) {
+            vContainers[i] = m1[i]
+            .rotateY(canvas.cursor.x * i * 0.01)
+            .rotateZ(i * 0.01)
+            .rotateX(i * 0.01)
+            .transform(cubeVertices, vContainers[i]);
+         } else {
+            vContainers[i] = m1[i]
+            .rotateY(1/canvas.cursor.x * -i * 0.01)
+            .rotateZ(i * 0.01)
+            .rotateX(i * 0.01)
+            .transform(cubeVertices, vContainers[i]);
+         }
+         
          drawShape(g, vContainers[i], cubeEdges, canvas.width, canvas.height);
       }
       

@@ -12,8 +12,10 @@ Vector3.prototype = {
       if (z !== undefined) this.z = z;
    },
 }
+
 var startTime = (new Date()).getTime() / 1000, time = startTime;
 var canvases = [];
+
 function initCanvas(id) {
    var canvas = document.getElementById(id);
    canvas.setCursor = function(x, y, z) {
@@ -27,6 +29,7 @@ function initCanvas(id) {
    canvases.push(canvas);
    return canvas;
 }
+
 function tick() {
    time = (new Date()).getTime() / 1000 - startTime;
    for (var i = 0 ; i < canvases.length ; i++)
@@ -113,6 +116,7 @@ Matrix.prototype.translate = function(x, y, z){
 Matrix.prototype.transform = function(src, dst){
    for(var i = 0; i < src.length; i++){
       for(var j = 0; j < this.matrix.length; j ++) {
+         //this.matrix[1][1] *= j;
          dst[i][j] = dot(src[i],this.matrix[j]);
       }
    }
