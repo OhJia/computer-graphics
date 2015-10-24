@@ -2,7 +2,8 @@
 <table>
 
 <tr>
-<td><canvas id='canvas1' width=980 height=600></td>
+<!-- <td><canvas id='canvas1' width=980 height=600></td> -->
+<td><canvas id='canvas1' /></td>
 <td width=50></td>
 <td valign=top>
 Hi, I am a cube that does tricks. Put your cursor over me to watch me spin. 
@@ -51,6 +52,8 @@ Hi, I am a cube that does tricks. Put your cursor over me to watch me spin.
    //console.log(vContainer);
 
    var canvas = initCanvas('canvas1');
+   canvas.width = 600;
+   canvas.height = 600;
    canvas.update = function(g) {
       g.lineWidth = 1;
       g.strokeStyle="#000000";
