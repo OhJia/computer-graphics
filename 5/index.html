@@ -35,14 +35,14 @@ Hi, I am a cube that does tricks. Put your cursor over me to watch me spin.
 
 // console.log(cubeVertices);
 // console.log('--------');
-   var vContainers = new Array(10);
-   var m1 = new Array(10)
-   for (var x = 0; x < 10; x++){
+   var vContainers = new Array(5);
+   var m1 = new Array(5)
+   for (var x = 0; x < 5; x++){
       vContainers[x] = new Array(cubeVertices.length);
       for (var i = 0; i < cubeVertices.length; i++){
          vContainers[x][i] = new Array(4);
       }
-      m1[x] = new Matrix().scale(0.2 * x, 0.2 * x, 0.2 * x);
+      m1[x] = new Matrix().scale(0.1 * x, 0.1 * x, 0.1 * x);
    }
    
    //var whee = document.getElementById('whee');
@@ -57,8 +57,8 @@ Hi, I am a cube that does tricks. Put your cursor over me to watch me spin.
    canvas.update = function(g) {
       g.lineWidth = 1;
       g.strokeStyle="#000000";
-      for (var i = 0; i < 10; i++){
-         g.lineWidth = 1/i;
+      for (var i = 0; i < 5; i++){
+         g.lineWidth = 2/i;
          if (canvas.cursor.x < canvas.width/2) {
            
             vContainers[i] = m1[i]
