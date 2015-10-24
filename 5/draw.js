@@ -75,7 +75,7 @@ var Matrix = function(){
 }
 
 Matrix.prototype.scale = function(x, y, z){
-   this._scaleMatrix = [[1, 0, 0, x], [0, 1, 0, y], [0, 0, 1, z], [0, 0, 0, 1]];
+   this._scaleMatrix = [[x, 0, 0, 0], [0, y, 0, 0], [0, 0, z, 0], [0, 0, 0, 1]];
    this.matrix = multiplyMatrix(this.matrix, this._scaleMatrix);
    return this;
 }
@@ -112,11 +112,12 @@ Matrix.prototype.translate = function(x, y, z){
 
 Matrix.prototype.transform = function(src, dst){
    for(var i = 0; i < src.length; i++){
-      var numRows = this.matrix.length;
-      for(var j = 0; j < numRows; j ++) {
-         dst[i][j] = dot(this.matrix[j], src[i]);
+      for(var j = 0; j < this.matrix.length; j ++) {
+         dst[i][j] = dot(src[i],this.matrix[j]);
       }
    }
+
+   //console.log(dst);
    return dst;
 }
 
@@ -163,19 +164,18 @@ function drawShape(g, verts, edges, width, height) {
       pointA = [],
       pointB = [];
 
-   console.log("verts, ", verts);
+   // console.log("verts, ", verts);
 
    g.beginPath();
    for(var e = 0; e < numEdge; e++){
-      pointA = verts[edges[e][0]];
-      pointB = verts[edges[e][1]];
-      
+      //pointA = verts[edges[e][0]].slice(0); // clone the array to prevent manipulation
+      //pointB = verts[edges[e][1]].slice(0); // clone the array to prevent manipulation
 
-      pointA[0] = (width  / 2) + pointA[0] * (width / 2);
-      pointA[1] = (height / 2) - pointA[1] * (width / 2);
-      pointB[0] = (width  / 2) + pointB[0] * (width / 2);
-      pointB[1] = (height / 2) - pointB[1] * (width / 2);
-      console.log("pointA ", pointA);
+      pointA[0] = (width  / 2) + verts[edges[e][0]][0] * (width / 2);
+      pointA[1] = (height / 2) - verts[edges[e][0]][1] * (width / 2);
+      pointB[0] = (width  / 2) + verts[edges[e][1]][0] * (width / 2);
+      pointB[1] = (height / 2) - verts[edges[e][1]][1] * (width / 2);
+      
       g.moveTo(pointA[0], pointA[1]);
       // console.log("pointA[0] ", pointA[0]);
       // console.log("pointA[1] ", pointA[1]);
