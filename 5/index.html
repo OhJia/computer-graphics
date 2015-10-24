@@ -5,7 +5,7 @@
 <td><canvas id='canvas1' width=600 height=400></td>
 <td width=50></td>
 <td valign=top>
-Hi, I am a cube that does tricks. Put your cursor over me to watch me spin. Wheeeee 
+Hi, I am a cube that does tricks. Put your cursor over me to watch me spin. 
 </td>
 </tr>
 
@@ -44,7 +44,7 @@ Hi, I am a cube that does tricks. Put your cursor over me to watch me spin. Whee
       m1[x] = new Matrix().scale(0.2 * x, 0.2 * x, 0.2 * x);
    }
    
-
+   //var whee = document.getElementById('whee');
    //var newVertices;
 
    
@@ -57,12 +57,14 @@ Hi, I am a cube that does tricks. Put your cursor over me to watch me spin. Whee
       for (var i = 0; i < 10; i++){
          g.lineWidth = 1/i;
          if (canvas.cursor.x < canvas.width/2) {
+           
             vContainers[i] = m1[i]
             .rotateY(canvas.cursor.x * i * 0.01)
             .rotateZ(i * 0.01)
             .rotateX(i * 0.01)
             .transform(cubeVertices, vContainers[i]);
          } else {
+            
             vContainers[i] = m1[i]
             .rotateY(1/canvas.cursor.x * -i * 0.01)
             .rotateZ(i * 0.01)
