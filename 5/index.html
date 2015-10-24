@@ -62,6 +62,7 @@ Hi, I am a cube that does tricks. Put your cursor over me to watch me spin.
          if (canvas.cursor.x < canvas.width/2) {
            
             vContainers[i] = m1[i]
+            // .rotateY(canvas.cursor.x * i * 0.01)
             .rotateY(canvas.cursor.x * i * 0.01)
             .rotateZ(i * 0.01)
             .rotateX(i * 0.01)
@@ -69,7 +70,7 @@ Hi, I am a cube that does tricks. Put your cursor over me to watch me spin.
          } else {
             
             vContainers[i] = m1[i]
-            .rotateY(1/canvas.cursor.x * -i * 0.01)
+            .rotateY((1/canvas.cursor.x) * -i * 0.01)
             .rotateZ(i * 0.01)
             .rotateX(i * 0.01)
             .transform(cubeVertices, vContainers[i]);
