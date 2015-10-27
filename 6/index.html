@@ -1,4 +1,4 @@
-<body style="background-color: #000033">
+<body style="background-color: #000000">
 <table>
 
 <tr>
@@ -118,7 +118,7 @@
    var torusVertices = []; 
    var torusEdges = [];
    var nTorusVertices = [];
-   var r = 0.5;
+   var r = 0.4;
 
    for (var i = 0; i < torusNumV; i++){
       var v = i/torusNumV;
@@ -127,8 +127,8 @@
          torusIndex = (i * torusNumV) + j;
          var u = j/torusNumU;
          var theta = 2 * Math.PI * u;
-         var x = (1 + r * Math.cos(phi)) * Math.cos(theta);
-         var y = (1 + r * Math.cos(phi)) * Math.sin(theta);
+         var x = (0.6 + r * Math.cos(phi)) * Math.cos(theta);
+         var y = (0.6 + r * Math.cos(phi)) * Math.sin(theta);
          var z = r * Math.sin(phi);
          torusVertices.push([x, y, z, 1]);
          if (j > 0){
@@ -149,12 +149,12 @@
    // TORUS
    var canvas4 = initCanvas('canvas4');
    canvas4.width = 400;
-   canvas4.height = 400;
+   canvas4.height = 300;
    canvas4.update = function(g) {
       g.lineWidth = 1.5;
             
       nTorusVertices = m3
-      //.rotateY((canvas.cursor.x) * 0.001)
+      .rotateY(0.001)
       .rotateZ(0.01)
       .rotateX(0.01)
       .transform(torusVertices, nTorusVertices);
@@ -166,12 +166,12 @@
    // SPHERE
    var canvas3 = initCanvas('canvas3');
    canvas3.width = 400;
-   canvas3.height = 400;
+   canvas3.height = 300;
    canvas3.update = function(g) {
       g.lineWidth = 1.5;
             
       nSphereVertices = m3
-      //.rotateY((canvas.cursor.x) * 0.001)
+      .rotateY(0.001)
       .rotateZ(0.01)
       .rotateX(0.01)
       .transform(sphereVertices, nSphereVertices);
@@ -183,13 +183,13 @@
    // CYLINDER
    var canvas = initCanvas('canvas2');
    canvas.width = 400;
-   canvas.height = 400;
+   canvas.height = 300;
    canvas.update = function(g) {
       g.lineWidth = 1.5;
       // g.strokeStyle="#000000";
             
       nCylinderVertices = m2
-      .rotateY((canvas.cursor.x) * 0.001)
+      .rotateY(0.001)
       .rotateZ(0.01)
       .rotateX(0.01)
       .transform(cylinderVertices, nCylinderVertices);
@@ -201,13 +201,13 @@
    // CUBE
    var canvas2 = initCanvas('canvas1');
    canvas2.width = 400;
-   canvas2.height = 400;
+   canvas2.height = 300;
    canvas2.update = function(g) {
       g.lineWidth = 1.5;
       g.strokeStyle="#000000";
             
       vContainer = m1
-      .rotateY((canvas.cursor.x) * 0.001)
+      .rotateY(0.001)
       .rotateZ(0.01)
       .rotateX(0.01)
       .transform(cubeVertices, vContainer);
