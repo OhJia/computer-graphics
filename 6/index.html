@@ -8,7 +8,8 @@
 </tr>
 
 <tr>
-
+<td><canvas id='canvas3' /></td>
+<td><canvas id='canvas4' /></td>
 </tr>
 
 </table>
@@ -17,7 +18,7 @@
 <script src=draw.js></script>
 <script>
 
-   // CUBE
+   // CUBE VERTICES & EDGES
    var cubeVertices = [];
    cubeVertices.push([-1, -1, -1, 1]);
    cubeVertices.push([1, -1, -1, 1]);
@@ -36,8 +37,9 @@
    // MATRIX
    var m1 = new Matrix().scale(0.2, 0.2, 0.2);
    var m2 = new Matrix().scale(0.3, 0.3, 0.3);
+   var m3 = new Matrix().scale(0.5, 0.5, 0.5);
 
-   // CYLINDER
+   // CYLINDER VERTICES & EDGES
    var cylinderEdges = [];  
    var numU = 30, numV = 30;
    var u, v;
@@ -46,7 +48,7 @@
    var numVertices = numU * numV + 1;
    // var cylinderVertices = new Array(numVertices); 
    var cylinderVertices = []; 
-   var numEdges = (numU) * (numV -1);
+   //var numEdges = (numU) * (numV -1);
    // var cylinderEdges = new Array(numEdges);
    var cylinderEdges = [];
    var nCylinderVertices = [];
@@ -75,9 +77,110 @@
       nCylinderVertices[i] = new Array(4);
    }
 
-   //console.log(cylinderVertices);
+   // SPHERE VERTICES & EDGES
+   var sphereEdges = [];  
+   var sphereNumU = 50, sphereNumV = 50;
+   var sphereIndex;
+   var sphereVertices = []; 
+   var sphereEdges = [];
+   var nSphereVertices = [];
 
- 
+   for (var i = 0; i < sphereNumV; i++){
+      var v = i/sphereNumV;
+      var phi = Math.PI * v - Math.PI/2;
+      for (var j = 0; j < sphereNumU; j++){
+         sphereIndex = (i * sphereNumV) + j;
+         var u = j/sphereNumU;
+         var theta = 2 * Math.PI * u;
+         var x = Math.cos(phi) * Math.cos(theta);
+         var y = Math.cos(phi) * Math.sin(theta);
+         var z = Math.sin(phi);
+         sphereVertices.push([x, y, z, 1]);
+         if (j > 0){
+            sphereEdges.push([sphereIndex - 1, sphereIndex]);
+         } else {
+            sphereEdges.push([sphereNumU + sphereIndex - 1, sphereIndex]);
+         }
+         if (i > 0){
+            sphereEdges.push([sphereIndex - sphereNumV, sphereIndex]);
+         }
+      }
+   }
+
+   for (var i = 0; i < sphereVertices.length; i++){
+      nSphereVertices[i] = new Array(4);
+   }
+
+   // TORUS VERTICES & EDGES
+   var torusEdges = [];  
+   var torusNumU = 30, torusNumV = 30;
+   var torusIndex;
+   var torusVertices = []; 
+   var torusEdges = [];
+   var nTorusVertices = [];
+   var r = 0.5;
+
+   for (var i = 0; i < torusNumV; i++){
+      var v = i/torusNumV;
+      var phi = Math.PI * 2 * v;
+      for (var j = 0; j < torusNumU; j++){
+         torusIndex = (i * torusNumV) + j;
+         var u = j/torusNumU;
+         var theta = 2 * Math.PI * u;
+         var x = (1 + r * Math.cos(phi)) * Math.cos(theta);
+         var y = (1 + r * Math.cos(phi)) * Math.sin(theta);
+         var z = r * Math.sin(phi);
+         torusVertices.push([x, y, z, 1]);
+         if (j > 0){
+            torusEdges.push([torusIndex - 1, torusIndex]);
+         } else {
+            torusEdges.push([torusNumU + torusIndex - 1, torusIndex]);
+         }
+         if (i > 0){
+            torusEdges.push([torusIndex - torusNumV, torusIndex]);
+         }
+      }
+   }
+
+   for (var i = 0; i < torusVertices.length; i++){
+      nTorusVertices[i] = new Array(4);
+   }
+
+   // TORUS
+   var canvas4 = initCanvas('canvas4');
+   canvas4.width = 400;
+   canvas4.height = 400;
+   canvas4.update = function(g) {
+      g.lineWidth = 1.5;
+            
+      nTorusVertices = m3
+      //.rotateY((canvas.cursor.x) * 0.001)
+      .rotateZ(0.01)
+      .rotateX(0.01)
+      .transform(torusVertices, nTorusVertices);
+      //console.log(vContainer);
+      
+      drawShape(g, nTorusVertices, torusEdges, canvas4.width, canvas4.height);     
+   }
+
+   // SPHERE
+   var canvas3 = initCanvas('canvas3');
+   canvas3.width = 400;
+   canvas3.height = 400;
+   canvas3.update = function(g) {
+      g.lineWidth = 1.5;
+            
+      nSphereVertices = m3
+      //.rotateY((canvas.cursor.x) * 0.001)
+      .rotateZ(0.01)
+      .rotateX(0.01)
+      .transform(sphereVertices, nSphereVertices);
+      //console.log(vContainer);
+      
+      drawShape(g, nSphereVertices, sphereEdges, canvas3.width, canvas3.height);     
+   }
+
+   // CYLINDER
    var canvas = initCanvas('canvas2');
    canvas.width = 400;
    canvas.height = 400;
@@ -95,6 +198,7 @@
       drawShape(g, nCylinderVertices, cylinderEdges, canvas.width, canvas.height);     
    }
 
+   // CUBE
    var canvas2 = initCanvas('canvas1');
    canvas2.width = 400;
    canvas2.height = 400;
