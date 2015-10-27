@@ -189,6 +189,45 @@
    for (var i = 0; i < bonusVertices.length; i++){
       nBonusVertices[i] = new Array(4);
    }
+
+   // // BONUS2 VERTICES & EDGES
+   // var bonus2Edges = [];  
+   // var bonus2NumU = 20, bonus2NumV = 20;
+   // var uMax = 2 * Math.PI, uMin = 0;
+   // var delu = (uMax - uMin)/bonus2NumU;
+   // var vMax = 0.4, vMin = -0.4;
+   // var delv = (vMax - vMin)/bonus2NumV;
+   // var bonus2Index;
+   // var bonus2Vertices = []; 
+   // var bonus2Edges = [];
+   // var nBonus2Vertices = [];
+   // var r = 0.4;
+
+   // for (var i = 0, u = uMin; i < bonusNumV; i++, u+=delu){
+   //    //var v = i/bonusNumV;
+   //    var phi = Math.PI * 2 * v;
+   //    for (var j = 0, v = vMin; j < bonusNumU; j++, v+=delv){
+   //       bonusIndex = (i * bonusNumV) + j;
+   //       //var u = j/bonusNumU;
+   //       var theta = 2 * Math.PI * u;
+   //       var x = Math.cos(u) + v*Math.cos(u/2) * Math.cos(u);
+   //       var y = Math.sin(u) + v*Math.cos(u/2) * Math.sin(u);
+   //       var z = v * Math.sin(u/2);
+   //       bonusVertices.push([x, y, z, 1]);
+   //       if (j > 0){
+   //          bonusEdges.push([bonusIndex - 1, bonusIndex]);
+   //       } else {
+   //          bonusEdges.push([bonusNumU + bonusIndex - 1, bonusIndex]);
+   //       }
+   //       if (i > 0){
+   //          bonusEdges.push([bonusIndex - bonusNumV, bonusIndex]);
+   //       }
+   //    }
+   // }
+
+   // for (var i = 0; i < bonusVertices.length; i++){
+   //    nBonusVertices[i] = new Array(4);
+   // }
    var x = 0;
 
    // TORUS
