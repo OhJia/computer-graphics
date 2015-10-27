@@ -147,8 +147,8 @@ function drawShape(g, verts, edges, width, height) {
       pointA = [],
       pointB = [];
 
-   var c = ["00", "CC", "FF", "33", "66", "99"];
-   // var r, g, b;
+   var c = ["0", "E", "F", "F"];
+   var x = 8;
    // console.log("verts, ", verts);
    // console.log("edges, ", edges);
    console.log("edges, ", edges[0]);
@@ -162,10 +162,12 @@ function drawShape(g, verts, edges, width, height) {
       pointA[1] = (height / 2) - verts[edges[e][0]][1] * (width / 2);
       pointB[0] = (width  / 2) + verts[edges[e][1]][0] * (width / 2);
       pointB[1] = (height / 2) - verts[edges[e][1]][1] * (width / 2);
-      // if (e%10 == 0){
-      //    x += 1;
-      // }
-      //g.strokeStyle="#" + c[e%5] + c[Math.min(e%5 + 1, 5)] + c[Math.min(e%5 + 2, 5)];
+      if (x == 0) {
+         x = 8;
+      } else {
+         x = 0;
+      }
+      g.strokeStyle="#" + c[e%3] + x + "0000";
 
       //console.log(e,e%5,"#" + c[e%5] + c[Math.min(e%5+1, 5)] + c[Math.min(e%5+2, 5)])
       g.moveTo(pointA[0], pointA[1]);
