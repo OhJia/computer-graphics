@@ -91,11 +91,11 @@
    var nSphereVertices = [];
 
    for (var i = 0; i < sphereNumV; i++){
-      var v = i/sphereNumV;
+      var v = i/(sphereNumV-1);
       var phi = Math.PI * v - Math.PI/2;
       for (var j = 0; j < sphereNumU; j++){
          sphereIndex = (i * sphereNumV) + j;
-         var u = j/sphereNumU;
+         var u = j/(sphereNumU-1);
          var theta = 2 * Math.PI * u;
          var x = Math.cos(phi) * Math.cos(theta);
          var y = Math.cos(phi) * Math.sin(theta);
@@ -108,7 +108,7 @@
          }
          if (i > 0){
             sphereEdges.push([sphereIndex - sphereNumV, sphereIndex]);
-         }
+         } 
       }
    }
 
@@ -126,11 +126,11 @@
    var r = 0.4;
 
    for (var i = 0; i < torusNumV; i++){
-      var v = i/torusNumV;
+      var v = i/(torusNumV -1);
       var phi = Math.PI * 2 * v;
       for (var j = 0; j < torusNumU; j++){
          torusIndex = (i * torusNumV) + j;
-         var u = j/torusNumU;
+         var u = j/(torusNumU -1);
          var theta = 2 * Math.PI * u;
          var x = (0.6 + r * Math.cos(phi)) * Math.cos(theta);
          var y = (0.6 + r * Math.cos(phi)) * Math.sin(theta);
@@ -155,9 +155,9 @@
    var bonusEdges = [];  
    var bonusNumU = 20, bonusNumV = 20;
    var uMax = 2 * Math.PI, uMin = 0;
-   var delu = (uMax - uMin)/bonusNumU;
+   var delu = (uMax - uMin)/(bonusNumU-1);
    var vMax = 0.4, vMin = -0.4;
-   var delv = (vMax - vMin)/bonusNumV;
+   var delv = (vMax - vMin)/(bonusNumV-1);
    var bonusIndex;
    var bonusVertices = []; 
    var bonusEdges = [];
