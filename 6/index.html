@@ -151,7 +151,10 @@
    canvas4.width = 400;
    canvas4.height = 300;
    canvas4.update = function(g) {
+      var c = ["00", "CC", "FF", "33", "66", "99"];
       g.lineWidth = 1.5;
+      g.strokeStyle="#" + c[Math.floor(Math.random()*c.length)]
+      + c[Math.floor(Math.random()*c.length)] + c[Math.floor(Math.random()*c.length)];
             
       nTorusVertices = m3
       .rotateY(0.001)
@@ -168,7 +171,10 @@
    canvas3.width = 400;
    canvas3.height = 300;
    canvas3.update = function(g) {
+      var c = ["00", "CC", "FF", "33", "66", "99"];
       g.lineWidth = 1.5;
+      g.strokeStyle="#" + c[Math.floor(Math.random()*c.length)]
+      + c[Math.floor(Math.random()*c.length)] + c[Math.floor(Math.random()*c.length)];
             
       nSphereVertices = m3
       .rotateY(0.001)
@@ -185,8 +191,10 @@
    canvas.width = 400;
    canvas.height = 300;
    canvas.update = function(g) {
+      var c = ["00", "CC", "FF", "33", "66", "99"];
       g.lineWidth = 1.5;
-      // g.strokeStyle="#000000";
+      g.strokeStyle="#" + c[Math.floor(Math.random()*c.length)]
+      + c[Math.floor(Math.random()*c.length)] + c[Math.floor(Math.random()*c.length)];
             
       nCylinderVertices = m2
       .rotateY(0.001)
@@ -203,8 +211,10 @@
    canvas2.width = 400;
    canvas2.height = 300;
    canvas2.update = function(g) {
+      var c = ["00", "CC", "FF", "33", "66", "99"];
       g.lineWidth = 1.5;
-      g.strokeStyle="#000000";
+      g.strokeStyle="#" + c[Math.floor(Math.random()*c.length)]
+      + c[Math.floor(Math.random()*c.length)] + c[Math.floor(Math.random()*c.length)];
             
       vContainer = m1
       .rotateY(0.001)
