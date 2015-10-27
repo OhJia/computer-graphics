@@ -92,6 +92,7 @@ Matrix.prototype.translate = function(x, y, z){
    return this;
 }
 
+var noise = new Noise();
 Matrix.prototype.transform = function(src, dst){
    for(var i = 0; i < src.length; i++){
       for(var j = 0; j < this.matrix.length; j ++) {
@@ -151,7 +152,7 @@ function drawShape(g, verts, edges, width, height) {
    var x = 8;
    // console.log("verts, ", verts);
    // console.log("edges, ", edges);
-   console.log("edges, ", edges[0]);
+   //console.log("edges, ", edges[0]);
 
    g.beginPath();
    for(var e = 0; e < numEdge; e++){

@@ -5,16 +5,21 @@
 <!-- <td><canvas id='canvas1' width=980 height=600></td> -->
 <td><canvas id='canvas1' /></td>
 <td><canvas id='canvas2'></td>
+<td><canvas id='canvas3' /></td>
 </tr>
 
 <tr>
-<td><canvas id='canvas3' /></td>
 <td><canvas id='canvas4' /></td>
+<td><canvas id='canvas5' /></td>
+</tr>
+
+<tr>
+
 </tr>
 
 </table>
 </body>
-
+<script src=noise.js></script>
 <script src=draw.js></script>
 <script>
 
@@ -146,11 +151,49 @@
       nTorusVertices[i] = new Array(4);
    }
 
+   // BONUS VERTICES & EDGES
+   var bonusEdges = [];  
+   var bonusNumU = 20, bonusNumV = 20;
+   var uMax = 2 * Math.PI, uMin = 0;
+   var delu = (uMax - uMin)/bonusNumU;
+   var vMax = 0.4, vMin = -0.4;
+   var delv = (vMax - vMin)/bonusNumV;
+   var bonusIndex;
+   var bonusVertices = []; 
+   var bonusEdges = [];
+   var nBonusVertices = [];
+   var r = 0.4;
+
+   for (var i = 0, u = uMin; i < bonusNumV; i++, u+=delu){
+      //var v = i/bonusNumV;
+      var phi = Math.PI * 2 * v;
+      for (var j = 0, v = vMin; j < bonusNumU; j++, v+=delv){
+         bonusIndex = (i * bonusNumV) + j;
+         //var u = j/bonusNumU;
+         var theta = 2 * Math.PI * u;
+         var x = Math.cos(u) + v*Math.cos(u/2) * Math.cos(u);
+         var y = Math.sin(u) + v*Math.cos(u/2) * Math.sin(u);
+         var z = v * Math.sin(u/2);
+         bonusVertices.push([x, y, z, 1]);
+         if (j > 0){
+            bonusEdges.push([bonusIndex - 1, bonusIndex]);
+         } else {
+            bonusEdges.push([bonusNumU + bonusIndex - 1, bonusIndex]);
+         }
+         if (i > 0){
+            bonusEdges.push([bonusIndex - bonusNumV, bonusIndex]);
+         }
+      }
+   }
+
+   for (var i = 0; i < bonusVertices.length; i++){
+      nBonusVertices[i] = new Array(4);
+   }
    var x = 0;
 
    // TORUS
    var canvas4 = initCanvas('canvas4');
-   canvas4.width = 400;
+   canvas4.width = 300;
    canvas4.height = 300;
    canvas4.update = function(g) {
       var c = ["00", "CC", "FF", "33", "66"];
@@ -170,7 +213,7 @@
 
    // SPHERE
    var canvas3 = initCanvas('canvas3');
-   canvas3.width = 400;
+   canvas3.width = 300;
    canvas3.height = 300;
    canvas3.update = function(g) {
       var c = ["00", "CC", "FF", "33", "66"];
@@ -190,7 +233,7 @@
 
    // CYLINDER
    var canvas = initCanvas('canvas2');
-   canvas.width = 400;
+   canvas.width = 300;
    canvas.height = 300;
    canvas.update = function(g) {
       var c = ["00", "CC", "FF", "33", "66"];
@@ -210,7 +253,7 @@
 
    // CUBE
    var canvas2 = initCanvas('canvas1');
-   canvas2.width = 400;
+   canvas2.width = 300;
    canvas2.height = 300;
    
    canvas2.update = function(g) {
@@ -228,24 +271,28 @@
       //console.log(vContainer);
       g.strokeStyle="#CC0033";
       drawShape(g, vContainer, cubeEdges, canvas2.width, canvas2.height); 
+   }
 
-      nSphereVertices = m1
+   // BONUS SHAPE
+   var canvas5 = initCanvas('canvas5');
+   canvas5.width = 300;
+   canvas5.height = 300;
+   
+   canvas5.update = function(g) {
+      //var c = ["00", "CC", "FF", "33", "66"];
+      g.lineWidth = 1;
+      // g.strokeStyle="#" + c[Math.min(x%4, 4)]
+      // + c[Math.min(x%4 + x%4, 4)] + c[Math.min(x%4 + x%4, 4)];
+            
+      nBonusVertices = m2
       .rotateY(0.001)
       .rotateZ(0.01)
       .rotateX(0.01)
-      .transform(sphereVertices, nSphereVertices);
-      //console.log(vContainer);
-      g.strokeStyle="#00FFCC";
-      drawShape(g, nSphereVertices, sphereEdges, canvas3.width, canvas3.height); 
+      .transform(bonusVertices, nBonusVertices);
 
-      nTorusVertices = m3
-      .rotateY(0.001)
-      .rotateZ(0.01)
-      .rotateX(0.01)
-      .transform(torusVertices, nTorusVertices);
       //console.log(vContainer);
-      g.strokeStyle="#00CC99";
-      drawShape(g, nTorusVertices, torusEdges, canvas4.width, canvas4.height);  
+      g.strokeStyle="#CC0033";
+      drawShape(g, nBonusVertices, bonusEdges, canvas5.width, canvas5.height); 
    }
 
 </script>
