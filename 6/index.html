@@ -215,7 +215,7 @@
    
    canvas2.update = function(g) {
       //var c = ["00", "CC", "FF", "33", "66"];
-      g.lineWidth = 1.5;
+      g.lineWidth = 1;
       // g.strokeStyle="#" + c[Math.min(x%4, 4)]
       // + c[Math.min(x%4 + x%4, 4)] + c[Math.min(x%4 + x%4, 4)];
             
@@ -225,16 +225,8 @@
       .rotateX(0.01)
       .transform(cubeVertices, vContainer);
 
-      nCylinderVertices = m2
-      .rotateY(0.001)
-      .rotateZ(0.01)
-      .rotateX(0.01)
-      .transform(cylinderVertices, nCylinderVertices);
       //console.log(vContainer);
-      
-      drawShape(g, nCylinderVertices, cylinderEdges, canvas.width, canvas.height);
-      //console.log(vContainer);
-      
+      g.strokeStyle="#CC0033";
       drawShape(g, vContainer, cubeEdges, canvas2.width, canvas2.height); 
 
       nSphereVertices = m1
@@ -243,7 +235,7 @@
       .rotateX(0.01)
       .transform(sphereVertices, nSphereVertices);
       //console.log(vContainer);
-      
+      g.strokeStyle="#00FFCC";
       drawShape(g, nSphereVertices, sphereEdges, canvas3.width, canvas3.height); 
 
       nTorusVertices = m3
@@ -252,7 +244,7 @@
       .rotateX(0.01)
       .transform(torusVertices, nTorusVertices);
       //console.log(vContainer);
-      
+      g.strokeStyle="#00CC99";
       drawShape(g, nTorusVertices, torusEdges, canvas4.width, canvas4.height);  
    }
 

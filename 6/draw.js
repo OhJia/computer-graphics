@@ -167,7 +167,7 @@ function drawShape(g, verts, edges, width, height) {
       } else {
          x = 0;
       }
-      g.strokeStyle="#" + c[e%3] + x + "0000";
+      // g.strokeStyle="#" + c[e%3] + x + "0000";
 
       //console.log(e,e%5,"#" + c[e%5] + c[Math.min(e%5+1, 5)] + c[Math.min(e%5+2, 5)])
       g.moveTo(pointA[0], pointA[1]);
