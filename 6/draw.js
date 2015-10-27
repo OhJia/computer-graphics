@@ -147,18 +147,28 @@ function drawShape(g, verts, edges, width, height) {
       pointA = [],
       pointB = [];
 
+   var c = ["00", "CC", "FF", "33", "66", "99"];
+   var x = 0, y = 1;
+   // var r, g, b;
    // console.log("verts, ", verts);
+   // console.log("edges, ", edges);
+   console.log("edges, ", edges[0]);
 
    g.beginPath();
    for(var e = 0; e < numEdge; e++){
       //pointA = verts[edges[e][0]].slice(0); // clone the array to prevent manipulation
       //pointB = verts[edges[e][1]].slice(0); // clone the array to prevent manipulation
-
+      //console.log(e, edges[e]);
       pointA[0] = (width  / 2) + verts[edges[e][0]][0] * (width / 2);
       pointA[1] = (height / 2) - verts[edges[e][0]][1] * (width / 2);
       pointB[0] = (width  / 2) + verts[edges[e][1]][0] * (width / 2);
       pointB[1] = (height / 2) - verts[edges[e][1]][1] * (width / 2);
-      
+      // if (e%10 == 0){
+      //    x += 1;
+      // }
+      g.strokeStyle="#" + c[e%5] + c[Math.min(e%5 + 1, 5)] + c[Math.min(e%5 + 2, 5)];
+
+      //console.log(e,e%5,"#" + c[e%5] + c[Math.min(e%5+1, 5)] + c[Math.min(e%5+2, 5)])
       g.moveTo(pointA[0], pointA[1]);
       // console.log("pointA[0] ", pointA[0]);
       // console.log("pointA[1] ", pointA[1]);
