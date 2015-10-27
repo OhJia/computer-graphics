@@ -1,4 +1,4 @@
-<body style="background-color: #000000">
+<body style="background-color: #333333">
 <table>
 
 <tr>
@@ -41,7 +41,7 @@
 
    // CYLINDER VERTICES & EDGES
    var cylinderEdges = [];  
-   var numU = 30, numV = 30;
+   var numU = 20, numV = 20;
    var u, v;
    var theta, cos, sin; 
    var index;
@@ -79,7 +79,7 @@
 
    // SPHERE VERTICES & EDGES
    var sphereEdges = [];  
-   var sphereNumU = 50, sphereNumV = 50;
+   var sphereNumU = 30, sphereNumV = 30;
    var sphereIndex;
    var sphereVertices = []; 
    var sphereEdges = [];
@@ -113,7 +113,7 @@
 
    // TORUS VERTICES & EDGES
    var torusEdges = [];  
-   var torusNumU = 30, torusNumV = 30;
+   var torusNumU = 20, torusNumV = 20;
    var torusIndex;
    var torusVertices = []; 
    var torusEdges = [];
@@ -146,15 +146,17 @@
       nTorusVertices[i] = new Array(4);
    }
 
+   var x = 0;
+
    // TORUS
    var canvas4 = initCanvas('canvas4');
    canvas4.width = 400;
    canvas4.height = 300;
    canvas4.update = function(g) {
-      var c = ["00", "CC", "FF", "33", "66", "99"];
-      g.lineWidth = 1.5;
-      g.strokeStyle="#" + c[Math.floor(Math.random()*c.length)]
-      + c[Math.floor(Math.random()*c.length)] + c[Math.floor(Math.random()*c.length)];
+      var c = ["00", "CC", "FF", "33", "66"];
+      g.lineWidth = 0.5;
+      g.strokeStyle="#" + c[Math.min(x%4, 4)]
+      + c[Math.min(x%4 + 1, 4)] + c[Math.min(x%4 + 1, 4)];
             
       nTorusVertices = m3
       .rotateY(0.001)
@@ -171,10 +173,10 @@
    canvas3.width = 400;
    canvas3.height = 300;
    canvas3.update = function(g) {
-      var c = ["00", "CC", "FF", "33", "66", "99"];
-      g.lineWidth = 1.5;
-      g.strokeStyle="#" + c[Math.floor(Math.random()*c.length)]
-      + c[Math.floor(Math.random()*c.length)] + c[Math.floor(Math.random()*c.length)];
+      var c = ["00", "CC", "FF", "33", "66"];
+      g.lineWidth = 0.5;
+      g.strokeStyle="#" + c[Math.min(x%4, 4)]
+      + c[Math.min(x%4 + 1, 4)] + c[Math.min(x%4 + 1, 4)];
             
       nSphereVertices = m3
       .rotateY(0.001)
@@ -191,10 +193,10 @@
    canvas.width = 400;
    canvas.height = 300;
    canvas.update = function(g) {
-      var c = ["00", "CC", "FF", "33", "66", "99"];
-      g.lineWidth = 1.5;
-      g.strokeStyle="#" + c[Math.floor(Math.random()*c.length)]
-      + c[Math.floor(Math.random()*c.length)] + c[Math.floor(Math.random()*c.length)];
+      var c = ["00", "CC", "FF", "33", "66"];
+      g.lineWidth = 0.5;
+      g.strokeStyle="#" + c[Math.min(x%4, 4)]
+      + c[Math.min(x%4 + 1, 4)] + c[Math.min(x%4 + 1, 4)];
             
       nCylinderVertices = m2
       .rotateY(0.001)
@@ -210,11 +212,12 @@
    var canvas2 = initCanvas('canvas1');
    canvas2.width = 400;
    canvas2.height = 300;
+   
    canvas2.update = function(g) {
-      var c = ["00", "CC", "FF", "33", "66", "99"];
+      var c = ["00", "CC", "FF", "33", "66"];
       g.lineWidth = 1.5;
-      g.strokeStyle="#" + c[Math.floor(Math.random()*c.length)]
-      + c[Math.floor(Math.random()*c.length)] + c[Math.floor(Math.random()*c.length)];
+      g.strokeStyle="#" + c[Math.min(x%4, 4)]
+      + c[Math.min(x%4 + 1, 4)] + c[Math.min(x%4 + 1, 4)];
             
       vContainer = m1
       .rotateY(0.001)
@@ -223,7 +226,8 @@
       .transform(cubeVertices, vContainer);
       //console.log(vContainer);
       
-      drawShape(g, vContainer, cubeEdges, canvas2.width, canvas2.height);     
+      drawShape(g, vContainer, cubeEdges, canvas2.width, canvas2.height);  
+      x++;   
    }
 
 </script>
