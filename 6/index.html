@@ -165,9 +165,9 @@
    var r = 0.4;
 
    for (var i = 0, u = uMin; i < bonusNumV; i++, u+=delu){
-      //var v = i/bonusNumV;
-      var phi = Math.PI * 2 * v;
+      //var v = i/bonusNumV;     
       for (var j = 0, v = vMin; j < bonusNumU; j++, v+=delv){
+         var phi = Math.PI * 2 * v;
          bonusIndex = (i * bonusNumV) + j;
          //var u = j/bonusNumU;
          var theta = 2 * Math.PI * u;

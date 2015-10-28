@@ -1,0 +1,151 @@
+<body style="background-color: #FFFFFF">
+<canvas id='canvas2' />
+<!-- <table>
+
+<tr>
+<td><canvas id='canvas1' width=980 height=600></td>
+<td><canvas id='canvas2' /></td>
+
+</tr>
+
+
+</table> -->
+</body>
+<script src=noise.js></script>
+<script src=draw.js></script>
+<script>
+
+   // CUBE VERTICES & EDGES
+   var cubeVertices = [];
+   cubeVertices.push([-1, -1, -1, 1]);
+   cubeVertices.push([1, -1, -1, 1]);
+   cubeVertices.push([-1, 1, -1, 1]);
+   cubeVertices.push([1, 1, -1, 1]);
+   cubeVertices.push([-1, -1, 1, 1]);
+   cubeVertices.push([1, -1, 1, 1]);
+   cubeVertices.push([-1, 1, 1, 1]);
+   cubeVertices.push([1, 1, 1, 1]);
+   var cubeEdges = [[0, 1], [1, 3], [3, 2], [2, 0], [0, 4], [1, 5], [3, 7], [2, 6], [4, 5], [5, 7], [7, 6], [6, 4]];
+   var vContainer = [];
+    for (var i = 0; i < cubeVertices.length; i++){
+      vContainer[i] = new Array(4);
+   }
+
+   
+
+   // MATRIX
+   // var m1 = new Matrix().scale(0.1, 0.1, 0.1);
+   // var m2 = new Matrix().scale(0.2, 0.2, 0.2);
+   // var m3 = new Matrix().scale(0.3, 0.3, 0.3);
+
+   var m1 = new Matrix().scale(0.05, 0.05, 0.05);
+   var m2 = new Matrix();
+   var m3 = new Matrix();
+
+   var cylinder1 = new Cylinder(60, 60).makeVerticesEdges(); 
+   var cylinderM1 = new Matrix().scale(0.1, 0.1, 0.1).translate(-8,0,0);
+   var cylinder2 = new Cylinder(60, 60).makeVerticesEdges(); 
+   var cylinderM2 = new Matrix().scale(0.1, 0.1, 0.1).translate(8,0,0);
+   
+   var sphere1 = new Sphere(50, 50).makeVerticesEdges();
+   var sphereM1 = new Matrix().scale(0.05, 0.05, 0.05)
+   .translate(0, 0, 1);
+
+   var torus1 = new Torus(60, 60).makeVerticesEdges();
+   var torusM1 = new Matrix()
+   .scale(0.3, 0.3, 0.3)
+   .rotateX(0.8)
+   .rotateZ(0.8)
+   ;
+
+   var bonus1 = new Bonus1(50, 50).makeVerticesEdges();
+   var bonusM1 = new Matrix().scale(0.2, 0.2, 0.2).translate(-2,0,-2);
+   var bonus2 = new Bonus1(50, 50).makeVerticesEdges();
+   var bonusM2 = new Matrix().scale(0.2, 0.2, 0.2).translate(2,0,-2);
+
+   var x = 0;
+
+   // CANVAS
+   var canvas = initCanvas('canvas2');
+   canvas.width = 1200;
+   canvas.height = 800;
+   canvas.update = function(g) {
+      var c = ["00", "CC", "FF", "33", "66"];
+      g.lineWidth = 0.5;
+      g.strokeStyle="#" + c[Math.min(x%4, 4)]
+      + c[Math.min(x%4 + 1, 4)] + c[Math.min(x%4 + 1, 4)];
+            
+      cylinder1.nVertices = cylinderM1
+      .rotateY(0.01+ canvas.cursor.x/canvas.width)
+      //.rotateZ(0.01)
+      //.rotateX(0.01)
+      .transform(cylinder1.vertices, cylinder1.nVertices);
+      //console.log(vContainer);   
+      g.lineWidth = 0.8;
+      g.strokeStyle="#00CCCC";  
+      drawShape(g, cylinder1.nVertices, cylinder1.edges, canvas.width, canvas.height);
+
+      cylinder2.nVertices = cylinderM2
+      .rotateY(0.01+ canvas.cursor.x/canvas.width)
+      //.rotateZ(0.01)
+      //.rotateX(0.01)
+      .transform(cylinder2.vertices, cylinder2.nVertices);
+      //console.log(vContainer);   
+      g.lineWidth = 0.8;
+      g.strokeStyle="#00CCCC";  
+      drawShape(g, cylinder2.nVertices, cylinder2.edges, canvas.width, canvas.height);
+
+      torus1.nVertices = torusM1
+      .rotateY(0.01-canvas.cursor.x/canvas.width)
+      .rotateZ(0.01)
+      //.rotateX(0.01)
+      .transform(torus1.vertices, torus1.nVertices); 
+      g.lineWidth = 0.5;
+      g.strokeStyle="#666666";    
+      drawShape(g, torus1.nVertices, torus1.edges, canvas.width, canvas.height); 
+
+      sphere1.nVertices = sphereM1
+      .translate(0, -Math.cos(0.2)+canvas.cursor.x/canvas.width, 0)
+      // .rotateY(Math.sin(0.05))
+      .rotateZ(Math.sin(0.2)+canvas.cursor.x/canvas.width)
+      // .rotateX(0.01)
+      .transform(sphere1.vertices, sphere1.nVertices);
+      g.lineWidth = 0.5;
+      //console.log(vContainer);   
+      g.strokeStyle="#333333";  
+      drawShape(g, sphere1.nVertices, sphere1.edges, canvas.width, canvas.height);     
+
+      // vContainer = m1
+      // // .rotateY(0.001)
+      // // .rotateZ(0.01)
+      // // .rotateX(0.01)
+      // .transform(cubeVertices, vContainer);
+      // //console.log(vContainer);
+      // g.lineWidth = 2;
+      // g.strokeStyle="#CC0033";
+      // drawShape(g, vContainer, cubeEdges, canvas.width, canvas.height);  
+
+      bonus1.nVertices = bonusM1
+      .rotateY(0.001+canvas.cursor.x/canvas.width)
+      .rotateZ(0.01)
+      .rotateX(0.01)
+      .transform(bonus1.vertices, bonus1.nVertices);
+      g.lineWidth = 1;
+      //console.log(vContainer);
+      g.strokeStyle="#0099FF";
+      drawShape(g, bonus1.nVertices, bonus1.edges, canvas.width, canvas.height); 
+
+      bonus2.nVertices = bonusM2
+      .rotateY(0.001-canvas.cursor.x/canvas.width)
+      .rotateZ(0.01)
+      .rotateX(0.01)
+      .transform(bonus1.vertices, bonus1.nVertices);
+      g.lineWidth = 1;
+      //console.log(vContainer);
+      g.strokeStyle="#0099FF";
+      drawShape(g, bonus2.nVertices, bonus2.edges, canvas.width, canvas.height);    
+   }
+
+
+</script>
+
