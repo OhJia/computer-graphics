@@ -17,10 +17,12 @@
             <h1 class="p10">Spline Editor</h1>
             <h6>SELECT SPLINE</h6>
             <li class="mx0">
-               <button class="btn btn-primary mb1 black bg-darken-1">Hermite Spline</button>
+               <button id="hSpline" onclick="selectHSpline()"
+                  class="btn btn-primary mb1 black bg-darken-1">Hermite Spline</button>
             </li>
             <li>
-               <button class="btn btn-primary mb1 black bg-darken-1">Bezier Spline</button>
+               <button id="bSpline" onclick="selectBSpline()"
+                  class="btn btn-primary mb1 black bg-darken-1">Bezier Spline</button>
             </li>
             
             <h6>CONTROLLERS</h6>   
@@ -61,6 +63,7 @@
 
    //var hSpline = new HSpline([-0.2, 0], [0.2, 0], [0, 2], [0, 2]);
    var hSpline = new HSpline([-0.2, 0], [0.2, 0]);
+   var bSpline = new BSpline([-0.5, 0], [0.5, 0]);
 
    var m1 = new Matrix().scale(0.05, 0.05, 0.05);
    var m2 = new Matrix();
@@ -81,6 +84,9 @@
    // .rotateZ(0.8)
    ;
 
+   var isHSpline = true;
+   var isBSpline = false;
+
    // CANVAS
    var canvas = initCanvas('canvas2');
    canvas.width = 800;
@@ -95,7 +101,13 @@
       //    hSpline.addPoint(canvas.cursor.x, canvas.cursor.y);
       // }
 
-      hSpline.transform(g, m1); 
+      if (isHSpline) {
+         hSpline.transform(g, m1); 
+      } else if (isBSpline) {
+         bSpline.transform(g, m1); 
+      }
+      
+      
       //console.log(canvas.cursor.z);
 
       // if (counter >= hSpline.splinePos.length -1) {
@@ -132,11 +144,53 @@
        
    }
 
-      // CURSOR
    // var cursorClicked
    var addPoint = false;
    var removePoint = false;
 
+   var selectHSpline = function() {
+      var isHSpline = true;
+      var isBSpline = false;
+      var addPoint = false;
+      var removePoint = false;
+      document.getElementById("hSpline").className =
+      document.getElementById("hSpline").className.replace
+      ( /(?:^|\s)bg-darken-1(?!\S)/g , " bg-darken-4" );
+      document.getElementById("bSpline").className =
+      document.getElementById("bSpline").className.replace
+      ( /(?:^|\s)bg-darken-4(?!\S)/g , " bg-darken-1" );
+      document.getElementById("add").className =
+      document.getElementById("add").className.replace
+      ( /(?:^|\s)bg-blue(?!\S)/g , " bg-darken-1" );
+      document.getElementById("remove").className =
+      document.getElementById("remove").className.replace
+      ( /(?:^|\s)bg-blue(?!\S)/g , " bg-darken-1" );
+      console.log(isHSpline, isBSpline)
+      hSpline.resetPoints();
+      bSpline.resetPoints();
+   }
+
+   var selectBSpline = function() {
+      var isHSpline = false;
+      var isBSpline = true;
+      var addPoint = false;
+      var removePoint = false;
+      document.getElementById("bSpline").className =
+      document.getElementById("bSpline").className.replace
+      ( /(?:^|\s)bg-darken-1(?!\S)/g , " bg-darken-4" );
+      document.getElementById("hSpline").className =
+      document.getElementById("hSpline").className.replace
+      ( /(?:^|\s)bg-darken-4(?!\S)/g , " bg-darken-1" );
+      document.getElementById("add").className =
+      document.getElementById("add").className.replace
+      ( /(?:^|\s)bg-blue(?!\S)/g , " bg-darken-1" );
+      document.getElementById("remove").className =
+      document.getElementById("remove").className.replace
+      ( /(?:^|\s)bg-blue(?!\S)/g , " bg-darken-1" );
+      console.log(isHSpline, isBSpline)
+      hSpline.resetPoints();
+      bSpline.resetPoints();
+   }
 
    var addPoints = function(){
       //var className = "bg-darken-1";

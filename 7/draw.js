@@ -92,6 +92,26 @@ var modelCoord = function(_x, _y){
     return coord;
 };
 
+// Pascal's triangle object
+var pascalTriangle = function(rows){
+    // Number of rows the triangle contains
+    this.rows = rows;
+
+    // The 2D array holding the rows of the triangle
+    this.triangle = new Array();
+    for (var r = 0; r < rows; r++) {
+        this.triangle[r] = new Array();
+        for (var i = 0; i <= r; i++) {
+            if (i == 0 || i == r)
+                this.triangle[r][i] = 1;
+            else
+                this.triangle[r][i] = this.triangle[r-1][i-1]+this.triangle[r-1][i];
+        }
+    } 
+
+    return this.triangle[rows-1];
+};
+
 
 /*
 matrix
@@ -499,7 +519,7 @@ HSpline.prototype.transform = function(_g, _m){
              t1 = t1.multScalar(2);
          } 
 
-         console.log(t0);
+         //console.log(t0);
 
          //cal curve
          for(var j = 0; j < tRatio; j++){
@@ -534,8 +554,8 @@ var BSpline = function(start, end){
 
     var p0 = new Vector3(start[0], start[1], 0);
     var p1 = new Vector3(end[0], end[1], 0);
-    this.t0 = new Vector3(0, 2, 0);
-    this.t1 = new Vector3(0, 2, 0);
+    // this.t0 = new Vector3(0, 2, 0);
+    // this.t1 = new Vector3(0, 2, 0);
     this.positions = [p0, p1];
 }
 
@@ -560,11 +580,11 @@ BSpline.prototype.transform = function(_g, _m){
 
     ////draw curve//--->
     var tRatio = 30; //<-smoothness of curve
-    var dst = new Vector3(0, 0, 0);
+    // var dst = new Vector3(0, 0, 0);
     //set variable for convenient
-    var p0, p1, t0, t1;
-    t0 = this.t0;
-    t1 = this.t1;
+    // var p0, p1, t0, t1;
+    // t0 = this.t0;
+    // t1 = this.t1;
     
     //init curve
     context.beginPath();
@@ -572,45 +592,23 @@ BSpline.prototype.transform = function(_g, _m){
     if(size > 0){
         var root = pixelCoord(this.positions[0].x, this.positions[0].y);
         context.moveTo(root.x, root.y);
+        //get pascal triangle row values
+        var pTri = pascalTriangle(size);
+        //cal curve
+        for(var j = 0; j < tRatio; j++){
+            var t = j / (tRatio - 1.0);
 
-       for(var i = 1; i < size; i++){
-         // p0 = this.positions[i-1];
-         // p1 = this.positions[i];
-         p0 = this.positions[i-1];
-         p1 = this.positions[i];
-         
+            //complete equation with pascals triangle
+            var sum = new Vector3(0, 0, 0);
+            for(var p = 0; p < size; p++){
+                sum.x += pTri[p] * Math.pow((1-t), (size-1-p)) * Math.pow(t, p) * this.positions[p].x;
+                sum.y += pTri[p] * Math.pow((1-t), (size-1-p)) * Math.pow(t, p) * this.positions[p].y;
+                sum.z += pTri[p] * Math.pow((1-t), (size-1-p)) * Math.pow(t, p) * this.positions[p].z;
+            }
 
-         if(i > 1){
-             t0 = p1.sub(this.positions[i-1]);
-             t0 = t0.multScalar(2);
-         } 
-
-         if(i < size - 1){
-             t1 = this.positions[i].sub(p0);
-             t1 = t1.multScalar(2);
-         } 
-
-         console.log(t0);
-
-         //cal curve
-         for(var j = 0; j < tRatio; j++){
-             var t = j / (tRatio -1);
-
-             var A = 2.0 * Math.pow(t, 3) - 3.0 * Math.pow(t, 2) + 1.0;
-             var B = Math.pow(t, 3) - 2.0 * Math.pow(t, 2) + t;
-             var C = -2.0 * Math.pow(t, 3) + 3.0 * Math.pow(t, 2);
-             var D = Math.pow(t, 3) - Math.pow(t, 2);
-
-             dst.x = A * p0.x + B * t0.x + C * p1.x + D * t1.x;
-             dst.y = A * p0.y + B * t0.y + C * p1.y + D * t1.y;
-             dst.z = A * p0.z + B * t0.z + C * p1.z + D * t1.z;
-
-             curve = pixelCoord(dst.x, dst.y);
-             context.lineTo(curve.x, curve.y);
-
-         }
-        } 
-    
+            var curve = pixelCoord(sum.x, sum.y);
+            context.lineTo(curve.x, curve.y);
+        }
     }
     context.stroke();
 };
