@@ -74,8 +74,19 @@ var pixelCoord = function(_x, _y){
     var x = _x;
     var y = _y;
 
-    x = (600  / 2) + x * (600 / 2);
-    y = (600 / 2) - y * (600 / 2);
+    x = (800 / 2) + x * (800 / 2);
+    y = (600 / 2) - y * (800 / 2);
+
+    var coord = new Vector3(x, y, 0);
+    return coord;
+};
+
+var modelCoord = function(_x, _y){
+    var x = _x;
+    var y = _y;
+
+    x = x * 1/(800 / 2) - 1;
+    y = 1 - y * 1/(600 / 2);
 
     var coord = new Vector3(x, y, 0);
     return coord;
@@ -360,124 +371,233 @@ Bonus1.prototype.makeVerticesEdges = function() {
 
 }
 
-// SPLINE
-
-// var HermiteSpline = function(start, end, control1, control2) {
-//     this.p1 = start;
-//     this.p2 = end;
-//     this.c1 = control1;
-//     this.c2 = control2;
-//     // this.spline = [start, end, control1, control2]
-//     return this;
+//**********************//
+// Hermite Spline Object
+//**********************//
+// var HSpline = function(start, end, t0, t1){
+//    var p0 = new Vector3(start[0], start[1], 0);
+//    var p1 = new Vector3(end[0], end[1], 0);
+//    var t0 = new Vector3(t0[0], t0[1], 0);
+//    var t1 = new Vector3(t1[0], t1[1], 0);
+//    this.positions = [p0, p1, t0, t1];
+//    this.splinePos = [];
 // };
 
-// // This is where the magic happens
-// // HermiteSpline.prototype.matrix = function() {
-// //    this.matrix = [[2, -2, 1, 1], [-3, 3, -2, -1], [0, 0, 1, 0], [1, 0, 0, 0]];
-// //    return this;
-// // }
+// HSpline.prototype.transform = function(_g, width, height){
+//     var context = _g;
+//     //var matrix  = _m.matrix;
+//     var size = this.positions.length;
 
-// HermiteSpline.prototype.interpolate = function(t) {
-//     // var t2 = t * t;
-//     // var t3 = t * t2;
-    
-//     // var a = -1 * t3 + 3 * t2 - 3 * t + 1;
-//     // var b = t3;
-//     // var c =  3 * t3 - 6 * t2 + 3 * t;
-//     // var d = -3 * t3 + 3 * t2;
-//     var matrix = [[2, -2, 1, 1], [-3, 3, -2, -1], [0, 0, 1, 0], [1, 0, 0, 0]];
-//     var spline = [this.p1, this.p2, this.c1, this.c2];
-//     //console.log(spline);
-//     var splineABCD = multiplyMatrix(matrix, spline);
-//     var a = splineABCD[0];
-//     var b = splineABCD[1];
-//     var c = splineABCD[2];
-//     var d = splineABCD[3];
-    
-//     return {
-//         x: a * t * t * t + b * t * t + c * t + d,
-//         y: a * t * t * t + b * t * t + c * t + d
+//     context.strokeStyle = 'black';
+
+//     ////draw ellipse//--->
+//     for(var i = 0; i < size; i ++){
+//         context.beginPath();
+//         // var pos = pixelCoord( this.positions[i].x, this.positions[i].y );
+//         var pos = pixelCoord( this.positions[i].x, this.positions[i].y);
+//         context.arc(pos.x, pos.y, 3, 0, Math.PI * 2, false);
+//         context.stroke();
+//         context.closePath();
 //     }
+
+//     ////draw curve//--->
+//     var tRatio = 50; //<-smoothness of curve
+//     var dst = new Vector3(0, 0, 0);
+//     //set variable for convenient
+//     var p0, p1, t0, t1;
+//     var curve = new Vector3(0, 0, 0);
+
+//     this.xPositions = new Array(tRatio);
+//     this.yPostitions = new Array(tRatio);
+//     //init curve
+//     context.beginPath();
+//     //move to initial point
+//     //if(size > 0){
+//      var root = pixelCoord(this.positions[0].x, this.positions[0].y);
+//      context.moveTo(root.x, root.y);
+
+//      //for(var i = 1; i < size; i++){
+//          // p0 = this.positions[i-1];
+//          // p1 = this.positions[i];
+//          p0 = this.positions[0];
+//          p1 = this.positions[1];
+//          t0 = this.positions[2];
+//          t1 = this.positions[3];
+
+//          // if(i > 1){
+//          //     t0 = p1.sub(this.positions[i-2]);
+//          //     t0 = t0.multScalar(0.7);
+//          // } else {
+//          //     t0 = p0.sub(p0);
+//          // }
+
+//          // if(i < size - 1){
+//          //     t1 = this.positions[i+1].sub(p0);
+//          //     t1 = t1.multScalar(0.7);
+//          // } else {
+//          //     t1 = p1.sub(p1);
+//          // }
+
+//          //cal curve
+//          for(var j = 0; j < tRatio; j++){
+//              var t = j / (tRatio -1);
+
+//              var A = 2.0 * Math.pow(t, 3) - 3.0 * Math.pow(t, 2) + 1.0;
+//              var B = Math.pow(t, 3) - 2.0 * Math.pow(t, 2) + t;
+//              var C = -2.0 * Math.pow(t, 3) + 3.0 * Math.pow(t, 2);
+//              var D = Math.pow(t, 3) - Math.pow(t, 2);
+
+//              dst.x = A * p0.x + B * t0.x + C * p1.x + D * t1.x;
+//              dst.y = A * p0.y + B * t0.y + C * p1.y + D * t1.y;
+//              dst.z = A * p0.z + B * t0.z + C * p1.z + D * t1.z;
+
+//              curve = pixelCoord(dst.x, dst.y);
+//              // curve.x = width/2 + dst.x * width/2;
+//              // curve.y = height/2 + dst.y * width/2;
+//              context.lineTo(curve.x, curve.y);
+//              //console.log(curve)
+//              //console.log(splinePos);
+//              this.splinePos[j] = curve;
+//              //console.log(curve.x);
+//              //return dst;
+//              // this.xPositions[j] = curve.x;
+//              // this.yPositions[j] = curve.y;
+//              // console.log(this.xPositions[j], this.yPositions[j])
+//          }
+//         //} 
+//     //}
+//     context.stroke();
+
 // };
 
-// HermiteSpline.prototype.transform = function(canvas){
-//    var ctx = canvas;
-//    ctx.beginPath();
-//    var step = 40;
-//    ctx.moveTo(this.p1.x, this.p1.y);
-//    for (var i = 0; i < step; i++){
-//       var t = i / step;
-//       var pos = this.interpolate(t);
-//       //console.log(pos);
-//       ctx.lineTo(pos.x, pos.y);
-//    }
-//    ctx.stroke();
-// }
+
+function drawShape(g, verts, edges, width, height) {
+   var numVert = verts.length,
+      numEdge = edges.length,
+      pointA = [],
+      pointB = [];
+   g.beginPath();
+   for(var e = 0; e < numEdge; e++){
+
+      pointA[0] = (width  / 2) + verts[edges[e][0]][0] * (width / 2);
+      pointA[1] = (height / 2) - verts[edges[e][0]][1] * (width / 2);
+      pointB[0] = (width  / 2) + verts[edges[e][1]][0] * (width / 2);
+      pointB[1] = (height / 2) - verts[edges[e][1]][1] * (width / 2);
+
+      g.moveTo(pointA[0], pointA[1]);
+      g.lineTo(pointB[0], pointB[1]);
+   }
+   g.stroke();
+   g.closePath();
+}
+
+
+
+//**********************//
+// Spline Object
+//**********************//
+
+var Spline = function() {
+    this.positions = [];
+}
+
+Spline.prototype.addPoint = function(_x, _y){
+    var pos = new Vector3(0, 0, 0);
+    pos = modelCoord(_x, _y);
+    this.positions.push(pos); 
+};
+
+Spline.prototype.resetPoints = function(){
+    this.positions = [];
+};
+
+Spline.prototype.detectPoints = function(_mousePos){
+    var size = this.positions.length;
+    var offset = 30;
+  
+    for(var i = 0; i < size; i++){
+        var index = i;
+        var coord = pixelCoord(this.positions[i].x, this.positions[i].y);
+        var distX = Math.abs(coord.x - _mousePos.x);
+        var distY = Math.abs(coord.y - _mousePos.y);
+        
+        if(distX < offset && distY < offset){
+            return index;
+        }
+    }
+};
+
+Spline.prototype.deletePoints = function(_index){
+    var i = _index;
+    this.positions.splice(i, 1);
+};
 
 //**********************//
 // Hermite Spline Object
 //**********************//
+
 var HSpline = function(start, end, t0, t1){
-   var p0 = new Vector3(start[0], start[1], 0);
-   var p1 = new Vector3(end[0], end[1], 0);
-   var t0 = new Vector3(t0[0], t0[1], 0);
-   var t1 = new Vector3(t1[0], t1[1], 0);
-   this.positions = [p0, p1, t0, t1];
-};
-HSpline.prototype.transform = function(_g){
+    Spline.call(this);
+
+    var p0 = new Vector3(start[0], start[1], 0);
+    var p1 = new Vector3(end[0], end[1], 0);
+    var t0 = new Vector3(t0[0], t0[1], 0);
+    var t1 = new Vector3(t1[0], t1[1], 0);
+    this.positions = [p0, p1, t0, t1];
+}
+
+HSpline.prototype = Object.create(Spline.prototype);
+
+HSpline.prototype.transform = function(_g, _m){
     var context = _g;
-    //var matrix  = _m.matrix;
+    var matrix  = _m.matrix;
     var size = this.positions.length;
 
     context.strokeStyle = 'black';
+    context.fillStyle = 'black';
 
     ////draw ellipse//--->
-    // for(var i = 0; i < size; i ++){
-    //     context.beginPath();
-    //     var pos = pixelCoord( this.positions[i].x, this.positions[i].y );
-    //     context.arc(pos.x, pos.y, 3, 0, Math.PI * 2, false);
-    //     context.stroke();
-    //     context.closePath();
-    // }
+    for(var i = 0; i < size; i ++){
+        context.beginPath();
+        var pos = pixelCoord( this.positions[i].x, this.positions[i].y );
+        context.arc(pos.x, pos.y, 3, 0, Math.PI * 2, false);
+        context.fill();
+        context.closePath();
+    }
 
     ////draw curve//--->
-    var tRatio = 50; //<-smoothness of curve
+    var tRatio = 40; //<-smoothness of curve
     var dst = new Vector3(0, 0, 0);
     //set variable for convenient
     var p0, p1, t0, t1;
-    var curve;
     //init curve
     context.beginPath();
     //move to initial point
-    //if(size > 0){
+    if(size > 0){
         var root = pixelCoord(this.positions[0].x, this.positions[0].y);
         context.moveTo(root.x, root.y);
 
-        //for(var i = 1; i < size; i++){
-            // p0 = this.positions[i-1];
-            // p1 = this.positions[i];
-            p0 = this.positions[0];
-            p1 = this.positions[1];
-            t0 = this.positions[2];
-            t1 = this.positions[3];
+        for(var i = 1; i < size; i++){
+            p0 = this.positions[i-1];
+            p1 = this.positions[i];
 
-            // if(i > 1){
-            //     t0 = p1.sub(this.positions[i-2]);
-            //     t0 = t0.multScalar(0.7);
-            // } else {
-            //     t0 = p0.sub(p0);
-            // }
+            if(i > 1){
+                t0 = p1.sub(this.positions[i-2]);
+                t0 = t0.multScalar(0.7);
+            } else {
+                t0 = p0.sub(p0);
+            }
 
-            // if(i < size - 1){
-            //     t1 = this.positions[i+1].sub(p0);
-            //     t1 = t1.multScalar(0.7);
-            // } else {
-            //     t1 = p1.sub(p1);
-            // }
+            if(i < size - 1){
+                t1 = this.positions[i+1].sub(p0);
+                t1 = t1.multScalar(0.7);
+            } else {
+                t1 = p1.sub(p1);
+            }
 
             //cal curve
             for(var j = 0; j < tRatio; j++){
-                var t = j / (tRatio -1);
+                var t = j / (tRatio - 1.0);
 
                 var A = 2.0 * Math.pow(t, 3) - 3.0 * Math.pow(t, 2) + 1.0;
                 var B = Math.pow(t, 3) - 2.0 * Math.pow(t, 2) + t;
@@ -488,55 +608,14 @@ HSpline.prototype.transform = function(_g){
                 dst.y = A * p0.y + B * t0.y + C * p1.y + D * t1.y;
                 dst.z = A * p0.z + B * t0.z + C * p1.z + D * t1.z;
 
-                curve = pixelCoord(dst.x, dst.y);
+                var curve = pixelCoord(dst.x, dst.y);
                 context.lineTo(curve.x, curve.y);
-                console.log(curve.x);
-                //return dst;
             }
-        //}
-    //}
+        }
+    }
     context.stroke();
-
 };
 
-
-function drawShape(g, verts, edges, width, height) {
-   var numVert = verts.length,
-      numEdge = edges.length,
-      pointA = [],
-      pointB = [];
-
-   var c = ["0", "E", "F", "F"];
-   var x = 8;
-   // console.log("verts, ", verts);
-   // console.log("edges, ", edges);
-   //console.log("edges, ", edges[0]);
-
-   g.beginPath();
-   for(var e = 0; e < numEdge; e++){
-      //pointA = verts[edges[e][0]].slice(0); // clone the array to prevent manipulation
-      //pointB = verts[edges[e][1]].slice(0); // clone the array to prevent manipulation
-      //console.log(e, edges[e]);
-      pointA[0] = (width  / 2) + verts[edges[e][0]][0] * (width / 2);
-      pointA[1] = (height / 2) - verts[edges[e][0]][1] * (width / 2);
-      pointB[0] = (width  / 2) + verts[edges[e][1]][0] * (width / 2);
-      pointB[1] = (height / 2) - verts[edges[e][1]][1] * (width / 2);
-      if (x == 0) {
-         x = 8;
-      } else {
-         x = 0;
-      }
-      // g.strokeStyle="#" + c[e%3] + x + "0000";
-
-      //console.log(e,e%5,"#" + c[e%5] + c[Math.min(e%5+1, 5)] + c[Math.min(e%5+2, 5)])
-      g.moveTo(pointA[0], pointA[1]);
-      // console.log("pointA[0] ", pointA[0]);
-      // console.log("pointA[1] ", pointA[1]);
-      g.lineTo(pointB[0], pointB[1]);
-   }
-   g.stroke();
-   g.closePath();
-}
 
 
 
