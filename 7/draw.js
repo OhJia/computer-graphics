@@ -510,20 +510,26 @@ HSpline.prototype.transform = function(_g, _m){
          
 
          if(i > 1){
-             t0 = p1.sub(this.positions[i-1]);
-             t0 = t0.multScalar(2);
-         } 
+             // t0 = p1.sub(this.positions[i-2]);
+             t0 = p0;
+             //t0 = t0.multScalar(2);
+         } else {
+            t0 = new Vector3(0,2,0);
+         }
 
          if(i < size - 1){
-             t1 = this.positions[i].sub(p0);
-             t1 = t1.multScalar(2);
-         } 
+             // t1 = this.positions[i+1].sub(p0);
+             t1 = p1;
+             //t1 = t1.multScalar(2);
+         } else {
+            t1 = new Vector3(0,2,0);
+         }
 
          //console.log(t0);
 
          //cal curve
          for(var j = 0; j < tRatio; j++){
-             var t = j / (tRatio -1);
+             var t = j / (tRatio-1);
 
              var A = 2.0 * Math.pow(t, 3) - 3.0 * Math.pow(t, 2) + 1.0;
              var B = Math.pow(t, 3) - 2.0 * Math.pow(t, 2) + t;
