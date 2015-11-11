@@ -1,19 +1,41 @@
 <link href="http://d2v52k3cl9vedd.cloudfront.net/basscss/7.0.4/basscss.min.css" rel="stylesheet">
 
+<style>
+   li {
+      list-style-type: none;
+   }
+   button { 
+      user-select: none; 
+   }
+</style>
+
 
 <body style="background-color: #FFFFFF">
    <div class="container mt4">
      <div class="clearfix">
          <div class="col col-2">
-            <h2 class="p10">Spline Editor</h2>
-            <button class="btn btn-primary mb1 black bg-darken-1">Hermite Spline</button>
-            <button class="btn btn-primary mb1 black bg-darken-1">Bezier Spline</button>
-            <button id="reset" onclick="resetPoints()"
-                     class="btn btn-primary mb1 black bg-darken-3">Reset</button>
-            <button id="add" onclick="addPoints()"
-                     class="btn btn-primary mb1 black bg-darken-1">Add</button>
-            <button id="remove" onclick="removePoints()"
-                     class="btn btn-primary mb1 black bg-darken-1">Remove</button>
+            <h1 class="p10">Spline Editor</h1>
+            <h6>SELECT SPLINE</h6>
+            <li class="mx0">
+               <button class="btn btn-primary mb1 black bg-darken-1">Hermite Spline</button>
+            </li>
+            <li>
+               <button class="btn btn-primary mb1 black bg-darken-1">Bezier Spline</button>
+            </li>
+            
+            <h6>CONTROLLERS</h6>   
+            <li>
+               <button id="reset" onclick="resetPoints()"
+                  class="btn btn-primary mb1 black bg-darken-3">Reset</button>
+            </li>
+            <li>
+               <button id="add" onclick="addPoints()"
+                  class="btn btn-primary mb1 black bg-darken-1">Add</button>
+            </li>
+            <li>
+               <button id="remove" onclick="removePoints()"
+                  class="btn btn-primary mb1 black bg-darken-1">Remove</button>
+            </li>                  
          </div>
          <div class="col col-10">
             <!-- <canvas id='canvas2' style="background-color: #FF0000"/> -->
@@ -37,7 +59,8 @@
 <script src=draw.js></script>
 <script>
 
-   var hSpline = new HSpline([-0.2,-0.2], [0.2, 0.2], [0, 2], [0, 2]);
+   //var hSpline = new HSpline([-0.2, 0], [0.2, 0], [0, 2], [0, 2]);
+   var hSpline = new HSpline([-0.2, 0], [0.2, 0]);
 
    var m1 = new Matrix().scale(0.05, 0.05, 0.05);
    var m2 = new Matrix();
@@ -72,7 +95,7 @@
       //    hSpline.addPoint(canvas.cursor.x, canvas.cursor.y);
       // }
 
-      hSpline.transform(g, canvas.width, canvas.height); 
+      hSpline.transform(g, m1); 
       //console.log(canvas.cursor.z);
 
       // if (counter >= hSpline.splinePos.length -1) {
