@@ -35,7 +35,6 @@ function draw() {
       ].join('\n')
    );
    
-   
    /*
       set vertices to buffer
    */
@@ -86,6 +85,37 @@ function draw() {
          vertices.push(x);
          vertices.push(y);
          vertices.push(z);
+      }
+   }
+
+   // torus vertices
+   var vertices = [];
+   var torusNumV = 20;
+   var torusNumU = 20;
+   var r = 0.2;
+   var radius = 0.6;
+   for (var v = 0; v < torusNumV; v++){
+      for (var u = 0; u < torusNumU; u++){
+
+        // 1
+        var phi = Math.PI * 2 * v/(torusNumV -1);
+        var theta = 2 * Math.PI * u/(torusNumU -1);
+        var x = (0.6 + r * Math.cos(phi)) * Math.cos(theta) * radius;
+        var y = (0.6 + r * Math.cos(phi)) * Math.sin(theta) * radius;
+        var z = r * Math.sin(phi) * radius;
+        vertices.push(x);
+        vertices.push(y);
+        vertices.push(z);
+
+        // 2
+        phi = Math.PI * 2 * (v+1)/(torusNumV -1);
+        theta = 2 * Math.PI * u/(torusNumU -1);
+        x = (0.6 + r * Math.cos(phi)) * Math.cos(theta) * radius;
+        y = (0.6 + r * Math.cos(phi)) * Math.sin(theta) * radius;
+        z = r * Math.sin(phi) * radius;
+        vertices.push(x);
+        vertices.push(y);
+        vertices.push(z);
       }
    }
    
