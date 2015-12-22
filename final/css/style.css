@@ -1,0 +1,92 @@
+.ui-elements {
+  /*position: relative;*/
+  z-index: 10;
+}
+
+.right {
+  float: right;
+  /*background:#999;*/
+  text-align: right;
+}
+
+.left {
+  display: inline-block;
+}
+
+img {
+  width: 100%;
+}
+
+header {
+  position:fixed; 
+  left:0px;
+  height:100px;
+  width:95%;
+  padding: 20px 20px 0 30px;
+  /*background:#999;*/
+}
+
+canvas {
+  position:fixed; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0; 
+}
+
+#drawCanvas {
+  z-index: 5;
+  
+}
+
+#canvas1 {
+  z-index: 1;
+  background-color: #000;
+}
+
+footer {
+  position:fixed; 
+  left:0px;
+  bottom:0px;
+  height:100px;
+  width:95%;
+  padding: 0 20px 0 30px;
+  /*background:#999; */
+}
+
+@-webkit-keyframes load_glitter {
+  0% {-webkit-transform: scale(1);}
+  50% {-webkit-transform: scale(2);}
+  100% {-webkit-transform: scale(1);}
+}
+@keyframes load_glitter {
+  0% {transform: scale(1);}
+  50% {transform: scale(2);}
+  100% {transform: scale(1);}
+}
+
+.app-loading .loader {
+  margin-top: 200px;
+}
+
+.loader {
+  /*margin-top: -20px;*/
+  text-align: center;
+} 
+
+.loader .star {
+  display: inline-block;
+  -webkit-transform-origin: center center;
+  transform-origin: center center;
+  -webkit-animation: load_glitter 1s infinite;
+  animation: load_glitter 1s infinite;
+  padding-right: 5px;
+}
+.loader .star:nth-child(2) {
+  -webkit-animation-delay: .33s;
+  animation-delay: .33s;
+}
+.loader .star:nth-child(3) {
+  -webkit-animation-delay: .67s;
+  animation-delay: .67s;
+}
