@@ -116,7 +116,7 @@ function draw() {
                     -adjust*sin,  0,cos, .1*cos,
                               0,  0,  0,  1];
       gl.uniformMatrix4fv(address('uMatrix'), false, matrix);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertices.length / 3);
+      gl.drawArrays(gl.TRIANGLES, 0, vertices.length / 3);
    }
 }
 
