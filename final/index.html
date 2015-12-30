@@ -3,23 +3,91 @@
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
   <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+  <link href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css'>
+  <style>
+    *{font-family: 'Roboto Slab', 'Georgia', serif;}
+    html, body {
+      margin: 0px;
+      padding: 0px;
+    }
+    p {
+      position: fixed;
+      z-index: 10;
+      top: 20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
+<script>
+  /*
+   * Debug parameters.
+   */
+  WebVRConfig = {
+    /**
+     * webvr-polyfill configuration
+     */
+
+    // Forces availability of VR mode.
+    FORCE_ENABLE_VR: true, // Default: false.
+    // Complementary filter coefficient. 0 for accelerometer, 1 for gyro.
+    //K_FILTER: 0.98, // Default: 0.98.
+    // How far into the future to predict during fast motion.
+    //PREDICTION_TIME_S: 0.050, // Default: 0.050s.
+
+    /**
+     * webvr-boilerplate configuration
+     */
+    // Forces distortion in VR mode.
+    //FORCE_DISTORTION: true, // Default: false.
+    // Override the distortion background color.
+    //DISTORTION_BGCOLOR: {x: 1, y: 0, z: 0, w: 1}, // Default: (0,0,0,1).
+};
+</script>
+
+<!--
+  three.js 3d library
+  -->
+<script src="third-party/threejs/three.js"></script>
+<!--
+  VRControls.js acquires positional information from connected VR devices and applies the transformations to a three.js camera object.
+   -->
+<script src="third-party/threejs/VRControls.js"></script>
+
+<!--
+  VREffect.js handles stereo camera setup and rendering.
+  -->
+<script src="third-party/threejs/VREffect.js"></script>
+
+<!--
+  A polyfill for WebVR using the Device{Motion,Orientation}Event API.
+  -->
+<script src="third-party/webvr-polyfill.js"></script>
+
+<!--
+  Helps enter and exit VR mode, provides best practices while in VR.
+  -->
+<script src="third-party/webvr-manager.js"></script>
+
+
 <script src=CT_Modeler.js></script>
 <script src=CT_Path.js></script>
 <script src=arc-to.js></script>
+<script src=drawOnMe.js></script>
 <script>
 var tryShape = [0.1, 0.2, 0.3, 0.5, 0.4, 0.6];
 var pi = Math.PI;
 var isDrawing = false;
 var newDrawing = false;
 
+
 var vertices = arc(0, 0, 1, 0, Math.PI*1.5, false, 10);
 // vertices = vertices.map()
-var vert = new Float32Array(vertices);
-var vertices2 = arc(0, 0, 1, 0, Math.PI*1.5, false, 15);
+var vert = new Float32Array(drawOnMe);
 // vertices = vertices.map()
-var vert2 = new Float32Array(vertices2);
+var vert2;
 
 function init() {
   var sin = Math.sin, cos = Math.cos, PI = Math.PI;
@@ -130,10 +198,13 @@ function _onPress(evt) {
 function _onRelease(evt) {
   if(isDrawing) {
     isDrawing = false; 
+    // console.log(drawVert);
+    //document.getElementById('vert').innerHTML = drawVert
     drawVert = [];
     drawCTPath = null;
     count = 0;
   }
+
 };
 
 function _onMove(evt) {
@@ -149,7 +220,7 @@ function _onMove(evt) {
     drawVert.push(x);
     console.log(x, y)
     // vertices = vertices.map()
-    var vert2 = new Float32Array(drawVert);
+    vert2 = new Float32Array(drawVert);
     obj.getChild(0).setPath(vert2);
     count++;
   }
@@ -158,6 +229,8 @@ function _onMove(evt) {
 </script>
 <center>
 <canvas id="canvas1"></canvas>
+<p>click and drag to draw!!!!!!</p>
+<span id="vert" />
 </center>
 </body>
 </html>
