@@ -1,0 +1,163 @@
+<html>
+<head>
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+</head>
+<body>
+<script src=CT_Modeler.js></script>
+<script src=CT_Path.js></script>
+<script src=arc-to.js></script>
+<script>
+var tryShape = [0.1, 0.2, 0.3, 0.5, 0.4, 0.6];
+var pi = Math.PI;
+var isDrawing = false;
+var newDrawing = false;
+
+var vertices = arc(0, 0, 1, 0, Math.PI*1.5, false, 10);
+// vertices = vertices.map()
+var vert = new Float32Array(vertices);
+var vertices2 = arc(0, 0, 1, 0, Math.PI*1.5, false, 15);
+// vertices = vertices.map()
+var vert2 = new Float32Array(vertices2);
+
+function init() {
+  var sin = Math.sin, cos = Math.cos, PI = Math.PI;
+  canvas1.width = window.innerWidth;
+  canvas1.height = window.innerHeight;
+  window.scene = new CT.Scene(canvas1);
+  scene.setLight(0, [1,1,1]);
+
+  canvas1.addEventListener('mousedown', _onPress);
+  canvas1.addEventListener('mouseup', _onRelease);
+  canvas1.addEventListener('mouseout', _onRelease);
+  canvas1.addEventListener('mousemove', _onMove);
+  canvas1.addEventListener('touchstart', _onPress);
+  canvas1.addEventListener('touchend', _onRelease);
+  canvas1.addEventListener('touchcancel', _onRelease);
+  canvas1.addEventListener('touchmove', _onMove);
+
+  window.obj = new CT.Node().scale(0.8);
+  //window.obj = new CT.Path();
+  scene.add(obj); // THIS
+
+  //var ctPath = new CT.Path();
+
+  var ctPath = new CT.Path().identity();
+  ctPath.setLineWidth(0.01, 0.015);
+  ctPath.setFill(false);
+  ctPath.setPath(vert);
+  console.log(vert);
+  obj.addChild(ctPath);
+
+  // if (newDrawing) {
+  //   // var vertices = arc(evt.offsetX, evt.offsetY, 1, 0, Math.PI*1.5, false, 10);
+  //   // // vertices = vertices.map()
+  //   // drawVert = new Float32Array(vertices);
+
+  //   var drawCTPath = new CT.Path();
+  //   drawCTPath.setLineWidth(0.01, 0.015);
+  //   drawCTPath.setFill(false);
+  //   drawCTPath.setPath(vert2);
+  //   obj.addChild(drawCTPath);
+  //   obj.getChild(1).identity().translate(-20, 2, 0);
+  // }
+
+   // obj.getChild(0).setFragmentShader(
+   //    ['precision highp float;'
+   //    ,'varying vec3 vNormal;'
+   //    ,'void main() { vec3 n = normalize(vNormal); gl_FragColor = vec4(n*n,1.); }'
+   //    ].join('\n')
+   // );
+
+}
+
+function update() {
+
+  for (var i = 0 ; i < obj.numChildren() ; i++) {
+    if(!isDrawing) {
+      obj.getChild(i).identity().translate(i, 0, 0).rotateY(time).rotateX(time/2);
+    } else {
+      obj.getChild(i).identity().translate(i, 0, 0).rotateY(0).rotateX(0);
+    }
+  }
+  console.log('c')
+  obj.draw();
+}
+
+setTimeout(function() {
+  init();
+  setInterval(function() {
+                 window.time = (new Date()).getTime() / 1000;
+                 update();
+              }, 16);
+}, 100);
+
+
+
+var drawCTPath, drawVert = [];
+var count = 0;
+function _onPress(evt) { 
+  isDrawing = true;
+  newDrawing = true;
+
+  count = 2;
+  
+  console.log("DRAWING? " + isDrawing);
+  //var vertices2 = arc(evt.offsetX, evt.offsetY, 1, 0, Math.PI*1.5, false, 15);
+  // vertices = vertices.map()
+  var x = (evt.layerX - canvas1.width/2) * 2/canvas1.width;
+  var y = (evt.layerY - canvas1.height/2) * 2/canvas1.height;
+  drawVert = [x, -y, x, x, -y, 0.2];
+  var vert2 = new Float32Array(drawVert);
+  
+
+  // obj.getChild(0) = new CT.Path();
+  //   obj.getChild(0).setLineWidth(0.01, 0.015);
+  //   obj.getChild(0).setFill(false);
+
+  obj.getChild(0).setPath(vert2);
+  console.log(x,y)
+  //obj.addChild(drawCTPath);
+  //obj.getChild(1).identity().translate(-20, 2, 0);
+  console.log('b')
+  //scene.add(obj);
+
+//console.log(obj.numChildren());
+
+};
+
+function _onRelease(evt) {
+  if(isDrawing) {
+    isDrawing = false; 
+    drawVert = [];
+    drawCTPath = null;
+    count = 0;
+  }
+};
+
+function _onMove(evt) {
+  if(isDrawing) {
+    console.log(evt);
+    newDrawing = false;
+    //var vertices = arc(evt.offsetX, evt.offsetY, 1, 0, Math.PI*1.5, false, 10);
+    arc(evt.layerX, evt.layerY, 5, 0, 2 * Math.PI, false);
+    var x = (evt.layerX - canvas1.width/2) * 2/canvas1.width;
+    var y = (evt.layerY - canvas1.height/2) * 2/canvas1.height;
+    drawVert.push(x);
+    drawVert.push(-y);
+    drawVert.push(x);
+    console.log(x, y)
+    // vertices = vertices.map()
+    var vert2 = new Float32Array(drawVert);
+    obj.getChild(0).setPath(vert2);
+    count++;
+  }
+};
+
+</script>
+<center>
+<canvas id="canvas1"></canvas>
+</center>
+</body>
+</html>

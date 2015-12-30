@@ -1,4 +1,33 @@
 
+function mix(a, b, t) {
+      if (t === undefined) return a;
+      if (a === undefined) return b;
+      if (b === undefined) return a;
+
+      if (! Array.isArray(a) && ! Array.isArray(b))
+         return a + (b - a) * t;
+
+      var dst = [];
+
+      if (! Array.isArray(a))
+         for (var i = 0 ; i < b.length ; i++)
+            dst.push(a + (b[i] - a) * t);
+
+      else if (! Array.isArray(b))
+         for (var i = 0 ; i < a.length ; i++)
+            dst.push(a[i] + (b - a[i]) * t);
+
+      else
+         for (var i = 0 ; i < min(a.length, b.length) ; i++)
+            dst.push(a[i] + (b[i] - a[i]) * t);
+
+      return dst;
+   }
+
+function pow(a,b) { return Math.pow(a,b); }
+
+function def(v, d) { return v !== undefined ? v : d !== undefined ? d : 0; }
+
 // A PATH, EITHER FILLED OR RENDERED AS TAPERED STROKES.
 
 CT.ShapePath = function() {
@@ -9,7 +38,7 @@ CT.ShapePath = function() {
       var gl      = this._gl,
           isFill  = this.getProperty('_isFill', false),
           program = this._program,
-          rgba    = this.getProperty('_rgba', [1,1,1,1]);
+          rgba    = this.getProperty('_rgba', [0,0,0,1]);
       gl.uniform1f(this._address('uFill'), isFill ? 1 : 0);
       if (isFill) {
          var centroid = [0,0,0];
