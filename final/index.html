@@ -71,13 +71,14 @@
   -->
 <script src="third-party/webvr-manager.js"></script>
 
-
 <script src=CT_Modeler.js></script>
 <script src=CT_Path.js></script>
 <script src=arc-to.js></script>
 <script src=drawOnMe.js></script>
+
+
 <script>
-var tryShape = [0.1, 0.2, 0.3, 0.5, 0.4, 0.6];
+
 var pi = Math.PI;
 var isDrawing = false;
 var newDrawing = false;
@@ -89,12 +90,58 @@ var vert = new Float32Array(drawOnMe);
 // vertices = vertices.map()
 var vert2;
 
+var renderer, canvas, scene, camera, controls, effect, manager;
+var line;
+
 function init() {
   var sin = Math.sin, cos = Math.cos, PI = Math.PI;
   canvas1.width = window.innerWidth;
   canvas1.height = window.innerHeight;
   window.scene = new CT.Scene(canvas1);
   scene.setLight(0, [1,1,1]);
+  /*
+    VR mode using webvr manager (polyfill), VReffect, and VRcontrol.
+    still need to write VRcontrol.
+  */
+
+  //Setup three.js WebGL renderer
+  // renderer = new THREE.WebGLRenderer({ antialias: true });
+  // renderer.setPixelRatio(window.devicePixelRatio);
+  // renderer.setSize( 512, 512 );
+
+  // canvas = document.getElementById("canvas1");
+  // canvas.width = window.innerWidth;
+  // canvas.height = window.innerHeight;
+  // // Append the canvas element created by the renderer to document body element.
+  // canvas.appendChild(renderer.domElement);
+  // // Create a three.js scene.
+  // scene = new THREE.Scene();
+  // // Create a three.js camera.
+  // //var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
+  // camera = new THREE.PerspectiveCamera(45, 1, 1, 1000);
+  // //scene.add(camera)
+
+  // // Apply VR headset positional data to camera.
+  // controls = new THREE.VRControls(camera);
+
+  // // Apply VR stereo rendering to renderer.
+  // effect = new THREE.VREffect(renderer);
+  // effect.setSize(window.innerWidth, window.innerHeight);
+
+
+  // // Create a VR manager helper to enter and exit VR mode.
+  // manager = new WebVRManager(renderer, effect, {hideButton: false});
+
+  // // 3d-drawing
+  // camera.position.z = 4;
+  // var cameraRig = new THREE.Object3D();
+  // cameraRig.add(camera);
+  // scene.add(cameraRig);
+
+
+  /*
+    End of VR and THREE.js
+  */
 
   canvas1.addEventListener('mousedown', _onPress);
   canvas1.addEventListener('mouseup', _onRelease);
@@ -106,41 +153,39 @@ function init() {
   canvas1.addEventListener('touchmove', _onMove);
 
   window.obj = new CT.Node().scale(0.8);
-  //window.obj = new CT.Path();
   scene.add(obj); // THIS
 
-  //var ctPath = new CT.Path();
 
   var ctPath = new CT.Path().identity();
-  ctPath.setLineWidth(0.01, 0.015);
+  ctPath.setLineWidth(0.025, 0.001);
   ctPath.setFill(false);
   ctPath.setPath(vert);
   console.log(vert);
   obj.addChild(ctPath);
+  // var material = new THREE.LineBasicMaterial({
+  //      color: 0x0000ff
+  // });
 
-  // if (newDrawing) {
-  //   // var vertices = arc(evt.offsetX, evt.offsetY, 1, 0, Math.PI*1.5, false, 10);
-  //   // // vertices = vertices.map()
-  //   // drawVert = new Float32Array(vertices);
+  // var geometry = new THREE.Geometry();
+  //   geometry.vertices.push(new THREE.Vector3(-10, 0, 0));
+  //   geometry.vertices.push(new THREE.Vector3(0, 10, 0));
+  //   geometry.vertices.push(new THREE.Vector3(10, 0, 0));
 
-  //   var drawCTPath = new CT.Path();
-  //   drawCTPath.setLineWidth(0.01, 0.015);
-  //   drawCTPath.setFill(false);
-  //   drawCTPath.setPath(vert2);
-  //   obj.addChild(drawCTPath);
-  //   obj.getChild(1).identity().translate(-20, 2, 0);
-  // }
+  // line = new THREE.Line(geometry, material);
+  // scene.add(line);
 
-   // obj.getChild(0).setFragmentShader(
-   //    ['precision highp float;'
-   //    ,'varying vec3 vNormal;'
-   //    ,'void main() { vec3 n = normalize(vNormal); gl_FragColor = vec4(n*n,1.); }'
-   //    ].join('\n')
-   // );
 
 }
 
 function update() {
+  // Update VR headset position and apply to camera.
+  //controls.update();
+
+  // Render the scene through the manager.
+  //manager.render(scene, camera, time);
+
+  //line.rotateY(time);
+  // renderer.render(scene, camera);
 
   for (var i = 0 ; i < obj.numChildren() ; i++) {
     if(!isDrawing) {
@@ -229,7 +274,7 @@ function _onMove(evt) {
 </script>
 <center>
 <canvas id="canvas1"></canvas>
-<p>click and drag to draw!!!!!!</p>
+<p>Click and drag to draw</p>
 <span id="vert" />
 </center>
 </body>
